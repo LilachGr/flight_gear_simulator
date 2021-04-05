@@ -1,0 +1,22 @@
+﻿<Window x:Class="ADP2_FLIGHTGEAR.Connection"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADP2_FLIGHTGEAR" xmlns:viewmodel="clr-namespace:flight_gear_simulator.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MyViewModel}"
+        mc:Ignorable="d"
+        Title="Connection" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="657*"/>
+            <ColumnDefinition Width="137*"/>
+        </Grid.ColumnDefinitions>
+        <Image Margin="0,0,-0.4,0" Source="../backgrounds/best-airlines-in-world-2019-og.jpg" Stretch="Fill" Grid.ColumnSpan="2"/>
+        <Button x:Name="con" Content="connect" HorizontalAlignment="Left" Margin="29,26,0,0" VerticalAlignment="Top" Width="114" Height="45" Click="Button_Connect"/>
+        <Label Content="Enter IP Address:" HorizontalAlignment="Left" Margin="161,33,0,0" VerticalAlignment="Top" Height="34" Width="167" FontSize="16"/>
+        <TextBox x:Name="ipaddress" HorizontalAlignment="Left" Height="22" Margin="291,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="122" Text="{Binding VM_Ip}"/>
+        <Label Content="Enter the Port:" HorizontalAlignment="Left" Margin="489,38,0,0" VerticalAlignment="Top" Height="34" Width="167" FontSize="16"/>
+        <TextBox x:Name="port" HorizontalAlignment="Left" Height="22" Margin="612,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="122" Text="{Binding VM_Port }" Grid.ColumnSpan="2"/>
+        <Label Content="Check That you opend the FlightGear" HorizontalAlignment="Left" Margin="275,0,0,0" VerticalAlignment="Top" Height="34" Width="291" FontSize="16"/>
+    </Grid>
+</Window>
