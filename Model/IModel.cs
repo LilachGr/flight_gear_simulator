@@ -24,6 +24,6 @@ namespace flight_gear_simulator.Model
         int Port { get; set; }
         string Ip { get; set; }
         bool CorrectCSV { get;}
-         bool CorrectIp_Port { get; }
+        bool CorrectIp_Port { get; }
     }
 }

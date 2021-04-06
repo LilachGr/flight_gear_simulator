@@ -1,4 +1,5 @@
-﻿using flight_gear_simulator;
+﻿using ADP2_FLIGHTGEAR.View;
+using flight_gear_simulator;
 using flight_gear_simulator.ViewModel;
 using Microsoft.Win32;
 using System;
@@ -91,6 +92,13 @@ namespace ADP2_FLIGHTGEAR
             //Connection connect = new Connection(vm);
             // connect.Show();
             // this.Close();
+        }
+
+        private void Button_DataInvestigation(object sender, RoutedEventArgs e)
+        {
+            DataInvestigation investigation = new DataInvestigation(vm);
+            investigation.Show();
+            this.Close();
         }
     }
 }
