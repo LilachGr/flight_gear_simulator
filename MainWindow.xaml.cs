@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ADP2_FLIGHTGEAR;
 using flight_gear_simulator.Model;
 using flight_gear_simulator.ViewModel;
 using Microsoft.Win32;

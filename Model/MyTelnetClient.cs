@@ -42,7 +42,7 @@ namespace flight_gear_simulator.Model
         }
 
         //check if we can use this ip   
-        public void connect(string ip, int port)
+        public void Connect(string ip, int port)
         {
             this.tcpClient = new TcpClient();
             bool IpPortReady = IpPorTInUse(ip,port);
@@ -73,7 +73,7 @@ namespace flight_gear_simulator.Model
             }
         }
 
-        public void disconnect()
+        public void Disconnect()
         {
             tcpClient.GetStream().Close();
            // this.tcpClient.Close();
@@ -81,15 +81,15 @@ namespace flight_gear_simulator.Model
             MessageBox.Show("disconnected!");
         }
 
-        public bool correctIp_port { get { return this.correctIp_Port; } }
+        public bool CorrectIp_port { get { return this.correctIp_Port; } }
    
-        public string read()
+        public string Read()
         {
             throw new NotImplementedException();
         }
 
         //Send a message to the server.
-        public void write(string command)
+        public void Write(string command)
         {
             Byte[] encodedMsg = Encoding.ASCII.GetBytes(command);
             //try to send the message to the server.
@@ -103,15 +103,16 @@ namespace flight_gear_simulator.Model
             }
         }
 
-        //to starrt the flying by the csv file
-        public void start(string path)
+        //to start the flying by the csv file
+        public void Start(string path, IModel model)
         {
             // connect("127.0.0.1", 5400);           
             StreamReader sr = new StreamReader(path);
             string line;
             while ((line = sr.ReadLine()) != null)
             {
-                write(line + "\n");
+                Write(line + "\n");
+                model.UpdateDataLive(line);
                 Thread.Sleep(100);
             }           
         }

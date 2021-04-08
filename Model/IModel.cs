@@ -11,14 +11,18 @@ namespace flight_gear_simulator.Model
     {
         //connect to server
         List<List<float>> GetData();
-        void connect();
+        void Connect();
         //start the fly
-        void start1();
+        void Start1();
         //disconnect from server
-        void disconnect();
+        void Disconnect();
         //add a message to server to queue.
         void EnqueueMsg(double val, string message);
         void CsvpathSet(string value);
+        //get the liveData list.
+        List<List<float>> GetLiveData();
+        //update the liveData.
+        void UpdateDataLive(string line);
 
         //connection
         int Port { get; set; }

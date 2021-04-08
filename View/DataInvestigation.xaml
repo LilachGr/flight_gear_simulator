@@ -12,7 +12,7 @@
             <ColumnDefinition Width="166*"/>
         </Grid.ColumnDefinitions>
         <Canvas Name="canGraph" Background="LightSteelBlue" Width="250" Height="150" Margin="44,55,334,216">
-            <TextBlock x:Name="text_x" TextWrapping="Wrap" Text="times in seconds" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF05055B" VerticalAlignment="Bottom" Canvas.Left="80" Canvas.Top="136"/>
+            <TextBlock x:Name="text_x" TextWrapping="Wrap" Text="times in milliseconds" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF05055B" VerticalAlignment="Bottom" Canvas.Left="80" Canvas.Top="136"/>
             <TextBlock x:Name="text_y" TextWrapping="Wrap" Text="values" Canvas.Left="-8" Canvas.Top="62" RenderTransformOrigin="0.5,0.5" FontFamily="Times New Roman" Foreground="#FF05055B" VerticalAlignment="Top" FontWeight="Bold">
                 <TextBlock.RenderTransform>
                     <TransformGroup>

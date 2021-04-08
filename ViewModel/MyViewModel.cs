@@ -17,7 +17,20 @@ namespace flight_gear_simulator.ViewModel
         public MyViewModel(IModel model)
         {
             this.model = model;
-            model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) { NotifyPropertyChanged("VM_" + e.PropertyName); };
+            model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
+                if (e.PropertyName == "liveData")
+                {
+                    if (model.GetLiveData().Count() != 0)
+                    {
+                        float value = model.GetLiveData().Last()[ChosenValusIndex];
+                        NotifyPropertyChanged("VM_" + e.PropertyName + "," + value);
+                    }
+                }
+                else
+                {
+                    NotifyPropertyChanged("VM_" + e.PropertyName);
+                }
+            };
         }
 
         public void NotifyPropertyChanged(string propName)
@@ -60,13 +73,13 @@ namespace flight_gear_simulator.ViewModel
         public int VM_Port { get; set; }
 
         // initialize the model ip
-        public void modelIP()
+        public void ModelIP()
         {
             model.Ip = VM_Ip;
         }
 
         // initialize the model port
-        public void modelPort()
+        public void ModelPort()
         {
             model.Port = VM_Port;
         }
@@ -74,12 +87,12 @@ namespace flight_gear_simulator.ViewModel
         //to connect to the FlightGear
         public void VM_connect()
         {
-            this.model.connect();
+            this.model.Connect();
         }
 
         public void VM_disconnect()
         {
-            this.model.disconnect();
+            this.model.Disconnect();
             isDisconnected = true;
         }
 
@@ -91,14 +104,22 @@ namespace flight_gear_simulator.ViewModel
         //before to connect set all of the IP and the Port
         public void VM_BeforeConnection()
         {
-            modelIP();
-            modelPort();
+            ModelIP();
+            ModelPort();
         }
          
         // the csv flying one time without sitting
         public void VM_Start1()
         {
-            this.model.start1();
+            this.model.Start1();
         }
+
+        public List<List<float>> VM_GetLiveData()
+        {
+            return this.model.GetLiveData();
+        }
+
+        //property to the index of the chosen value
+        public int ChosenValusIndex { get; set; }
     }
 }

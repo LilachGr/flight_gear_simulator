@@ -47,7 +47,6 @@ namespace ADP2_FLIGHTGEAR
                 fly.Show();
                 this.Close();
             }
-
         }
     }
 }

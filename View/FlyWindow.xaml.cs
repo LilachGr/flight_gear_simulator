@@ -38,7 +38,8 @@ namespace ADP2_FLIGHTGEAR
         {            
             //flying by the user story1 defention(one time)without controls
             vm.VM_Start1();
-            MessageBox.Show("fly ended choose another option!");
+            //MessageBox.Show("fly ended choose another option!");
+            MessageBox.Show("start the flight in the flightGear application!");
         }
 
         private void Button_StopFly(object sender, RoutedEventArgs e)
@@ -60,7 +61,7 @@ namespace ADP2_FLIGHTGEAR
             }
             else
             {
-                 vm.VM_disconnect();
+                vm.VM_disconnect();
                 MainWindow main = new MainWindow();
                 main.Show();
                 this.Close();

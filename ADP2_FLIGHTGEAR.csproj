@@ -55,11 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Enum.cs" />
     <Compile Include="View\Connection.xaml.cs">
-       <DependentUpon>Connection.xaml</DependentUpon>
+      <DependentUpon>Connection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DataInvestigation.xaml.cs">
+      <DependentUpon>DataInvestigation.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FlighGear1.xaml.cs">
-       <DependentUpon>FlighGear1.xaml</DependentUpon>
+      <DependentUpon>FlighGear1.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FlyWindow.xaml.cs">
       <DependentUpon>FlyWindow.xaml</DependentUpon>
@@ -111,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\Connection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataInvestigation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -35,3 +35,5 @@
 *.vs
 obj
 bin
+/View/Window1.xaml
+/View/Window1.xaml.cs
