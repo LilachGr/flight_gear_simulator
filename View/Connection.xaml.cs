@@ -29,7 +29,6 @@ namespace ADP2_FLIGHTGEAR
         public Connection(MyViewModel vm)
         {
             this.vm = vm;
-            
             InitializeComponent();
         }
 
@@ -48,7 +47,6 @@ namespace ADP2_FLIGHTGEAR
                 fly.Show();
                 this.Close();
             }
-
         }
     }
 }

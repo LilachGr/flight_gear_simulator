@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:flight_gear_simulator" xmlns:viewmodel="clr-namespace:flight_gear_simulator.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MyViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Upload csv" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="102*" />
@@ -13,13 +13,12 @@
             <ColumnDefinition Width="16*"/>
             <ColumnDefinition Width="23*" />
             <ColumnDefinition Width="218*" />
-          <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="31*"/>
             <ColumnDefinition Width="40*"/>
         </Grid.ColumnDefinitions>
         <Image Grid.ColumnSpan="7" Margin="0,0,-0.4,0" Source="backgrounds/Digital_tech_breaker.png" Stretch="Fill" />
         <Button x:Name="uploadCsv" Content="upload" HorizontalAlignment="Left" Margin="229.4,358,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.5,0.5" Height="20" Click="Button_UploadCsv" Grid.Column="1"/>
         <TextBox x:Name="csvpath" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="367" Grid.Column="1" Margin="114.4,330,0,0" Grid.ColumnSpan="4" Text="{Binding VMCsvPath}"/>
         <Button x:Name="choose"  Content="choose csv file" Grid.Column="1" HorizontalAlignment="Left" Margin="229.4,309,0,0" VerticalAlignment="Top" Width="111" CommandParameter="{Binding VMCsvPath}"  Click="Button_ChooseFile"/>
-
     </Grid>
 </Window>

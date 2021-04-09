@@ -17,6 +17,6 @@
         <TextBox x:Name="ipaddress" HorizontalAlignment="Left" Height="22" Margin="291,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="122" Text="{Binding VM_Ip}"/>
         <Label Content="Enter the Port:" HorizontalAlignment="Left" Margin="489,38,0,0" VerticalAlignment="Top" Height="34" Width="167" FontSize="16"/>
         <TextBox x:Name="port" HorizontalAlignment="Left" Height="22" Margin="612,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="122" Text="{Binding VM_Port }" Grid.ColumnSpan="2"/>
-        <Label Content="Check That you opend the FlightGear" HorizontalAlignment="Left" Margin="275,0,0,0" VerticalAlignment="Top" Height="34" Width="291" FontSize="16"/>
+        <Label Content="Check That you opend the FlightGear" HorizontalAlignment="Left" Margin="275,0,0,0" VerticalAlignment="Top" Height="34" Width="291" FontSize="16" FontWeight="Bold"/>
     </Grid>
 </Window>
