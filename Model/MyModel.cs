@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml;
 
 namespace flight_gear_simulator.Model
 {
     class MyModel : IModel
     {
         private List<List<float>> csvData;
-        private List<List<float>> liveData = new List<List<float>>();
+        private List<List<(DateTime, float)>> liveData = new List<List<(DateTime, float)>> ();
         ITelnetClient telnetClient;
         private string csvPath;
         private int port;
@@ -22,16 +23,17 @@ namespace flight_gear_simulator.Model
         bool correctCSV =true;
         bool correctIP_port = true;
         Thread thread;
+        Dictionary<string, int> xmlValues = new Dictionary<string, int>();
 
-       /* public List<float> lineData
-        {
-            get { return this.lineData; }
-            set
-            {
-                this.lineData = value;
-                NotifyPropertyChanged("lineData");
-            }
-        }*/
+        /* public List<float> lineData
+         {
+             get { return this.lineData; }
+             set
+             {
+                 this.lineData = value;
+                 NotifyPropertyChanged("lineData");
+             }
+         }*/
 
         public int Port
         {
@@ -64,7 +66,7 @@ namespace flight_gear_simulator.Model
         // start to fly by csv one time
         public void Start1()
         {
-             thread = new Thread(new ThreadStart(delegate ()
+            thread = new Thread(new ThreadStart(delegate ()
             {
                 this.telnetClient.Start(this.csvPath, this);
             }));
@@ -83,7 +85,7 @@ namespace flight_gear_simulator.Model
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
-   
+
         public void Disconnect()
         {
             if (thread != null)
@@ -182,22 +184,73 @@ namespace flight_gear_simulator.Model
             this.correctIP_port = this.telnetClient.CorrectIp_port;
         }
 
-        public List<List<float>> GetLiveData()
+        public List<List<(DateTime, float)>> GetLiveData()
         {
             return liveData;
         }
 
         public void UpdateDataLive(string line)
         {
-            List<float> data = new List<float>();
+            List<(DateTime, float)> data = new List<(DateTime, float)>();
             var values = line.Split(',');
             int size = values.Length;
+            DateTime time = DateTime.Now;
             for (int i = 0; i < size; i++)
             {
-                data.Add(float.Parse(values[i]));
+                data.Add((time, float.Parse(values[i])));
             }
             this.liveData.Add(data);
             NotifyPropertyChanged("liveData");
+        }
+
+        public void CreateValuesFromXML()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("../../playback_small.xml");
+            //XmlNode nodeInput = doc.DocumentElement.SelectSingleNode("/input");
+            XmlNodeList nodeInput = doc.GetElementsByTagName("input");
+            int i = 0;
+            foreach (XmlNode nodeChunk in nodeInput[0])
+            {
+                if (nodeChunk.Name == "chunk")
+                {
+                    string text = nodeChunk.ChildNodes[0].InnerText;
+                    int j = 2;
+                    while (xmlValues.ContainsKey(text))
+                    {
+                        text = text + j;
+                        j++;
+                    }
+                    xmlValues.Add(text, i);
+                    i++;
+                }
+                //string text = nodeChunk.Name;
+               
+            }
+                /*using (XmlReader reader = XmlReader.Create(@"../../playback_small.xml"))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            //return only when you have START tag  
+                            switch (reader.Name.ToString())
+                            {
+                                case "Name":
+                                    Console.WriteLine("Name of the Element is : " + reader.ReadString());
+                                    break;
+                                case "Location":
+                                    Console.WriteLine("Your Location is : " + reader.ReadString());
+                                    break;
+                            }
+                        }
+                        Console.WriteLine("");
+                    }
+                }*/
+        }
+        public Dictionary<string, int> GetXmlValue()
+        {
+            return this.xmlValues;
         }
     }
 }

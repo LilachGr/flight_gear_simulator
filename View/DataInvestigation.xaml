@@ -4,36 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADP2_FLIGHTGEAR.View"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="DataInvestigation" Height="450" Width="800">
+        Title="Data Investigation" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="629*"/>
-            <ColumnDefinition Width="166*"/>
-        </Grid.ColumnDefinitions>
-        <Canvas Name="canGraph" Background="LightSteelBlue" Width="250" Height="150" Margin="44,55,334,216">
-            <TextBlock x:Name="text_x" TextWrapping="Wrap" Text="times in milliseconds" FontWeight="Bold" FontFamily="Times New Roman" Foreground="#FF05055B" VerticalAlignment="Bottom" Canvas.Left="80" Canvas.Top="136"/>
-            <TextBlock x:Name="text_y" TextWrapping="Wrap" Text="values" Canvas.Left="-8" Canvas.Top="62" RenderTransformOrigin="0.5,0.5" FontFamily="Times New Roman" Foreground="#FF05055B" VerticalAlignment="Top" FontWeight="Bold">
-                <TextBlock.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </TextBlock.RenderTransform>
-            </TextBlock>
-        </Canvas>
-        <Label FontWeight="Bold">Choose value</Label>
+        <Image Source="../backgrounds/low-angle-shot-airplane-descending-from-clouded-sky_181624-26225.jpg" Stretch="Fill"/>
+        <Grid >
+            <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="10,10,450,200" BorderBrush="DarkBlue" />
+        </Grid>
 
-        <StackPanel Name ="valueRadioButtons" Margin="562,55,0,168" HorizontalAlignment="Left" Width="194" Grid.ColumnSpan="2">
-            <RadioButton >aileron</RadioButton>
-            <RadioButton >elevator</RadioButton>
-            <RadioButton >rudder</RadioButton>
-            <RadioButton >flaps</RadioButton>
-            <RadioButton >slats</RadioButton>
-        </StackPanel>
-        <Button x:Name="chosenValue" Content="Change value" Margin="562,182,138,216" Grid.ColumnSpan="2" Click="Change_Value"/>
-
+        <Button x:Name="chosenValue" Content="Change value" Margin="459,54,241,327" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
+        <Button Content="Return to the main" HorizontalAlignment="Left" Margin="645,10,0,0" VerticalAlignment="Top" Width="139" Click="Mainwindow_Click" Height="30" Background="Blue" Foreground="White"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="433,18,0,0" VerticalAlignment="Top" Width="152"/>
     </Grid>
 </Window>

@@ -27,6 +27,7 @@ namespace ADP2_FLIGHTGEAR
     public partial class FlyWindow : Window
     {
         MyViewModel vm;
+        private static bool isFlyStarted = false;
         public FlyWindow(MyViewModel vm)
         {
             this.vm = vm;
@@ -35,11 +36,17 @@ namespace ADP2_FLIGHTGEAR
         }
 
         private void Button_JustCsvFlyOption(object sender, RoutedEventArgs e)
-        {            
-            //flying by the user story1 defention(one time)without controls
+        {
+            if (isFlyStarted)
+            {
+                vm.VM_disconnect();
+                isFlyStarted = false;
+            }
+            isFlyStarted = true;
+            //flying by the user story1 definition (one time) without controls
             vm.VM_Start1();
             //MessageBox.Show("fly ended choose another option!");
-            MessageBox.Show("start the flight in the flightGear application!");
+            MessageBox.Show("Started the flight in the FlightGear application!");
         }
 
         private void Button_StopFly(object sender, RoutedEventArgs e)
@@ -97,9 +104,15 @@ namespace ADP2_FLIGHTGEAR
 
         private void Button_DataInvestigation(object sender, RoutedEventArgs e)
         {
-            DataInvestigation investigation = new DataInvestigation(vm);
-            investigation.Show();
-            this.Close();
+            if (isFlyStarted)
+            {
+                DataInvestigation investigation = new DataInvestigation(vm);
+                investigation.Show();
+                this.Close();
+            } else
+            {
+                MessageBox.Show("You need to start the flight before using this option!");
+            }
         }
     }
 }
