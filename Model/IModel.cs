@@ -28,10 +28,19 @@ namespace flight_gear_simulator.Model
         //create the values from the playback_small xml
         void CreateValuesFromXML();
         Dictionary<string, int> GetXmlValue();
+        //get dll Address and create a connection to the dll
+        void DllConnect(string dllAdr, string CsvLearnPath, float Threshold);
+        //disconnect from the dll
+        void DllDisconnect();
+        //return if dll is connected
+        bool IsDllConnected();
+        //get the correlated value of specific feature
+        string GetCorrelatedValue(string feature);
+        int GetCorrelatedIndex(string feature);
 
 
-    //connection
-    int Port { get; set; }
+        //connection
+        int Port { get; set; }
         string Ip { get; set; }
         bool CorrectCSV { get;}
         bool CorrectIp_Port { get; }

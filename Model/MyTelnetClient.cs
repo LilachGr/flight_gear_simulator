@@ -75,10 +75,13 @@ namespace flight_gear_simulator.Model
 
         public void Disconnect()
         {
-            tcpClient.GetStream().Close();
-           // this.tcpClient.Close();
-            tcpClient.Close(); //disconnect from the server.
-            MessageBox.Show("disconnected!");
+            if (tcpClient != null)
+            {
+                tcpClient.GetStream().Close();
+                // this.tcpClient.Close();
+                tcpClient.Close(); //disconnect from the server.
+                MessageBox.Show("disconnected!");
+            }
         }
 
         public bool CorrectIp_port { get { return this.correctIp_Port; } }

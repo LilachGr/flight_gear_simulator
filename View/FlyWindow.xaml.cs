@@ -28,6 +28,7 @@ namespace ADP2_FLIGHTGEAR
     {
         MyViewModel vm;
         private static bool isFlyStarted = false;
+        private static bool isConnectDll = false;
         public FlyWindow(MyViewModel vm)
         {
             this.vm = vm;
@@ -104,15 +105,26 @@ namespace ADP2_FLIGHTGEAR
 
         private void Button_DataInvestigation(object sender, RoutedEventArgs e)
         {
-            if (isFlyStarted)
+            if (isFlyStarted && isConnectDll)
             {
                 DataInvestigation investigation = new DataInvestigation(vm);
                 investigation.Show();
                 this.Close();
-            } else
+            } else if (!isFlyStarted)
             {
                 MessageBox.Show("You need to start the flight before using this option!");
+            } else if (!isConnectDll)
+            {
+                MessageBox.Show("You need to connect a dll before using this option!");
             }
+        }
+
+        private void Button_ConnectDll(object sender, RoutedEventArgs e)
+        {
+            isConnectDll = true;
+            DllConnection connect = new DllConnection(vm);
+            connect.Show();
+            this.Close();
         }
     }
 }

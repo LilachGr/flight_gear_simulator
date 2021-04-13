@@ -10,11 +10,21 @@
     <Grid>
         <Image Source="../backgrounds/low-angle-shot-airplane-descending-from-clouded-sky_181624-26225.jpg" Stretch="Fill"/>
         <Grid >
-            <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="10,10,450,200" BorderBrush="DarkBlue" />
+            <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="36,94,424,117" BorderBrush="DarkBlue" />
         </Grid>
 
-        <Button x:Name="chosenValue" Content="Change value" Margin="459,54,241,327" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
-        <Button Content="Return to the main" HorizontalAlignment="Left" Margin="645,10,0,0" VerticalAlignment="Top" Width="139" Click="Mainwindow_Click" Height="30" Background="Blue" Foreground="White"/>
-        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="433,18,0,0" VerticalAlignment="Top" Width="152"/>
+        <Grid >
+            <oxy:PlotView x:Name="CorrelatedGraph" Model ="{Binding PlotCorrelatedGraph}" Margin="402,66,28,195" BorderBrush="DarkBlue" />
+        </Grid>
+
+        <Grid >
+            <oxy:PlotView x:Name="BothFeaturesGraph" Model ="{Binding PlotBothFeaturesGraph}" Margin="402,243,28,10" BorderBrush="DarkBlue" />
+        </Grid>
+
+        <Button x:Name="chosenValue" Content="Change value" Margin="430,18,269.333,362.667" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
+        <Button Content="Return to the main" HorizontalAlignment="Left" Margin="644,18,0,0" VerticalAlignment="Top" Width="139" Click="Mainwindow_Click" Height="30" Background="Blue" Foreground="White"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="251,26,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="0.441,2.636"/>
+        <Label x:Name="label" Content="Choose value:" HorizontalAlignment="Left" Margin="74,10,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" Foreground="White"/>
+        <Label x:Name="label_Copy" Content="Choose value:" HorizontalAlignment="Left" Margin="74,14,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" />
     </Grid>
 </Window>

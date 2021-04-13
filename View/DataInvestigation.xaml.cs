@@ -33,22 +33,26 @@ namespace ADP2_FLIGHTGEAR.View
             InitializeComponent();
             UpdateValueComboBox();
             CompositionTarget.Rendering += CompositionTargetRendering;
-            vm.SetUpModel();
+            vm.SetUpModelBasicGraph();
+            vm.SetUpModelCorrelatedGraph();
+            vm.SetUpModelBothFeaturesGraph();
             vm.ButtonChosenValueGraphPressed = false;
         }
 
         private void UpdateValueComboBox()
         {
-            vm.SetValuesXML();
             comboBox.ItemsSource = vm.ValuesXML;
-
         }
         private void CompositionTargetRendering(object sender, EventArgs e)
         {
             if (vm.ButtonChosenValueGraphPressed)
             {
-                vm.UpdateModel();
+                vm.UpdateModelBasicGraph();
+                vm.UpdateModelCorrelatedGraph();
+                vm.UpdateModelBothFeaturesGraph();
                 BasicGraph.InvalidateVisual();
+                CorrelatedGraph.InvalidateVisual();
+                BothFeaturesGraph.InvalidateVisual();
             }
         }
 
@@ -60,31 +64,6 @@ namespace ADP2_FLIGHTGEAR.View
             {
                 MessageBox.Show("Please choose an option!");
             }
-            /*int size = valueRadioButtons.Children.Count;
-            int valueIndex = -1;
-            for (int i = 0; i < size; i++)
-            {
-                if ((valueRadioButtons.Children[i] as System.Windows.Controls.RadioButton).IsChecked == true)
-                {
-                    valueIndex = i;
-                    break;
-                }
-            }
-            if (valueIndex == -1)
-            {
-                MessageBox.Show("Please choose an option!");
-            }
-            else
-            {
-                if (vm.ChosenValusIndex != valueIndex)
-                {
-                    this.isValueChosen = true;
-                    //update the index in the vm
-                    vm.ChosenValusIndex = valueIndex;
-                    //add all the data until now to the graph
-                    vm.UpdateOldData();
-                }
-            }*/
         }
 
         private void Mainwindow_Click(object sender, RoutedEventArgs e)

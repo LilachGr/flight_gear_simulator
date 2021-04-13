@@ -23,6 +23,8 @@
         <Button Content="Return to the MainWindow" HorizontalAlignment="Left" Margin="260,62,0,0" VerticalAlignment="Top" Width="253" Click="Mainwindow_Click" Height="30" Background="#FF08E003"/>
         <Button Content="Exit" HorizontalAlignment="Left" Height="30" Margin="502,62,0,0" VerticalAlignment="Top" Width="88" Click="Exit_Click" Background="#FFFD2525"/>
         <Button x:Name="connect" Content="connect" HorizontalAlignment="Left" Height="60" Margin="588,62,0,0" VerticalAlignment="Top" Width="86" Click="Button_Connect"/>
-        <Button x:Name="dataInvestigation" Content="Show data investigation" HorizontalAlignment="Left" Height="37" Margin="260,123,0,0" VerticalAlignment="Top" Width="242" Background="#FF08E003" Click="Button_DataInvestigation"/>
+        <Button x:Name="dataInvestigation" Content="Show data investigation" HorizontalAlignment="Left" Height="37" Margin="260,160,0,0" VerticalAlignment="Top" Width="242" Background="#FF08E003" Click="Button_DataInvestigation"/>
+        <Button x:Name="connectDll" Content="Dll connection" HorizontalAlignment="Left" Height="37" Margin="260,123,0,0" VerticalAlignment="Top" Width="242" Background="#FF08E003" Click="Button_ConnectDll"/>
+
     </Grid>
 </Window>

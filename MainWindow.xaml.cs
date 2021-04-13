@@ -31,6 +31,7 @@ namespace flight_gear_simulator
             InitializeComponent();
             vm = new MyViewModel(new MyModel(new MyTelnetClient()));
             DataContext = vm;
+            vm.SetValuesXML();
         }
 
         private void Button_UploadCsv(object sender, RoutedEventArgs e)
