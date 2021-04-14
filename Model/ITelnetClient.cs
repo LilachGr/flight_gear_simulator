@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +19,8 @@ namespace flight_gear_simulator.Model
         //start flying one time without controls user story1
         void Start(string path, IModel model);
         //checking if we can connect to the given ip and port
-         bool CorrectIp_port { get; }
+        void setLineReading();
+        bool CorrectIp_port { get; }
+
     }
 }

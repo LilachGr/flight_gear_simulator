@@ -1,4 +1,5 @@
-﻿using flight_gear_simulator.Model;
+﻿using flight_gear_simulator;
+using flight_gear_simulator.Model;
 using flight_gear_simulator.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,13 @@ namespace ADP2_FLIGHTGEAR.View
     public partial class DataInvestigation : Window
     {
         MyViewModel vm;
-
-        public DataInvestigation(MyViewModel vm)
+        VMJoystic vmJoy;
+        DashBoardViewModel vmDash;
+        public DataInvestigation(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
         {
             this.vm = vm;
+            this.vmJoy = vmJoy;
+            this.vmDash = vmDash;
             DataContext = vm;
             InitializeComponent();
             UpdateValueComboBox();
@@ -69,7 +73,7 @@ namespace ADP2_FLIGHTGEAR.View
         private void Mainwindow_Click(object sender, RoutedEventArgs e)
         {
             vm.DisconnectPlotModel();
-            FlyWindow main = new FlyWindow(vm);
+            FlyWindow main = new FlyWindow(vm, vmJoy, vmDash);
             main.Show();
             this.Close();
         }

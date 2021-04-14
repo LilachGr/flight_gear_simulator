@@ -1,4 +1,5 @@
-﻿using flight_gear_simulator.ViewModel;
+﻿using flight_gear_simulator;
+using flight_gear_simulator.ViewModel;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,14 @@ namespace ADP2_FLIGHTGEAR.View
     public partial class DllConnection : Window
     {
         MyViewModel vm;
-        public DllConnection(MyViewModel vm)
+        VMJoystic vmJoy;
+        DashBoardViewModel vmDash;
+        public DllConnection(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
         {
+
             this.vm = vm;
+            this.vmJoy = vmJoy;
+            this.vmDash = vmDash;
             InitializeComponent();
             DataContext = vm;
         }
@@ -35,7 +41,7 @@ namespace ADP2_FLIGHTGEAR.View
             if (vm.VMIsDllConnected())
             {
                 MessageBox.Show("connected successfully");
-                FlyWindow fly = new FlyWindow(vm);
+                FlyWindow fly = new FlyWindow(vm, vmJoy, vmDash);
                 fly.DataContext = this;
                 fly.Show();
                 this.Close();

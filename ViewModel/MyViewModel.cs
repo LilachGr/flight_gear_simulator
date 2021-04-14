@@ -7,15 +7,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace flight_gear_simulator.ViewModel
 {
-   public  class MyViewModel : INotifyPropertyChanged
+    public class MyViewModel : INotifyPropertyChanged
     {
         private IModel model;
-        public event PropertyChangedEventHandler PropertyChanged;
-        bool isDisconnected = false;
+        bool isDisconnected = true;
+
         private PlotModel plotBasicGraph;
         private PlotModel plotCorrelatedGraph;
         private PlotModel plotBothFeaturesGraph;
@@ -33,13 +34,11 @@ namespace flight_gear_simulator.ViewModel
                 }
             };
         }
-
+        public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyPropertyChanged(string propName)
         {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-
         public void DisconnectPlotModel()
         {
             plotBasicGraph.ResetAllAxes();
@@ -262,10 +261,9 @@ namespace flight_gear_simulator.ViewModel
                 }
             }
         }
-
         //property to bind data with the textbox
         public string VMCsvPath { get; set; }
-
+        public string VMxmlpath { get; set; }
         public string CsvLearnPath { get; set; }
 
         public float Threshold { get; set; }
@@ -279,7 +277,7 @@ namespace flight_gear_simulator.ViewModel
 
         public void SetValuesXML()
         {
-            model.CreateValuesFromXML();
+            model.CreateValuesFromXML(VMxmlpath);
             ValuesXML = model.GetXmlValue().Keys;
         }
 
@@ -288,22 +286,24 @@ namespace flight_gear_simulator.ViewModel
         {
             return model.CorrectCSV;
         }
-
+        public bool VMcorrectXml()
+        {
+            return model.CorrectXml;
+        }
         //checking if we can connect to the givn Ip and Port
         public bool VMcorrectIP_Port()
         {
             return model.CorrectIp_Port;
         }
-
         // initialize the csvPath
         public void UploadPath()
         {
-            model.CsvpathSet(VMCsvPath);
+            model.pathsSet(VMCsvPath,VMxmlpath);
         }
-
         //set the ip
         public string VM_Ip { get; set; }
-       
+
+
         //set the port
         public int VM_Port { get; set; }
 
@@ -314,48 +314,75 @@ namespace flight_gear_simulator.ViewModel
         {
             this.model.DllConnect(DllAdr, CsvLearnPath, Threshold);
         }
+        //index of the place of the airplain from csv file
+        public int VM_SetIndex
+        {
+            get { return this.model.SetIndex; }
+            set
+            {
+                this.model.SetIndex = value;
 
+
+            }
+        }
         public string VMGetCorrelatedValue()
         {
             return this.model.GetCorrelatedValue(ChosenValue);
         }
+        public string VM_Setindxo { get { return this.model.Setindxo; } }
+        //setting the time
+        public string VM_Time { get { return model.Time; } }
+
+        public int VM_csvSize
+        {
+            get
+            {
+                return this.model.csvSize;
+            }
+        }
+
+
 
         // initialize the model ip
         public void ModelIP()
         {
             model.Ip = VM_Ip;
         }
-
         // initialize the model port
         public void ModelPort()
         {
             model.Port = VM_Port;
         }
-
         //to connect to the FlightGear
         public void VM_connect()
         {
             this.model.Connect();
+            isDisconnected = false;
         }
-
         public void VM_disconnect()
         {
             this.model.Disconnect();
             isDisconnected = true;
         }
-
+        public void stopIT()
+        {
+            this.model.IsStopedLoop = true;
+        }
+        public void startIT()
+        {
+            this.model.IsStopedLoop = false;
+        }
         public bool Vm_isDisconnected()
         {
             return this.isDisconnected;
         }
-
         //before to connect set all of the IP and the Port
         public void VM_BeforeConnection()
         {
             ModelIP();
             ModelPort();
         }
-         
+
         // the csv flying one time without sitting
         public void VM_Start1()
         {
@@ -401,5 +428,45 @@ namespace flight_gear_simulator.ViewModel
                 }
             }
         }
+        public void VM_SetIndexToBack()
+        {
+            this.model.SetIndexToBack();
+        }
+        public void VM_SetIndextoFront()
+        {
+            this.model.SetIndextoFront();
+        }
+        public void VM_Pause()
+        {
+            this.model.Pause();
+
+        }
+        //play the video
+        public void VM_Play()
+        {
+
+            this.model.Play();
+
+        }
+
+        public Thread myThread()
+        {
+           return this.model.myThread;
+        }
+
+        /// <summary>
+        /// CHANGING IN THREAD SLEEP
+        /// </summary>
+        public double VM_speedsend
+        {
+            get { return model.Speedsend; }
+            set
+            {
+                model.changeSpeed(value);
+            }
+        }
+
+
+
     }
 }

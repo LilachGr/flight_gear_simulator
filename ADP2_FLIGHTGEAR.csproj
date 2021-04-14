@@ -88,8 +88,16 @@
     </ApplicationDefinition>
     <Compile Include="Model\MyDllFunctions.cs" />
     <Compile Include="Model\IDllFunctions.cs" />
+    <Compile Include="ViewModel\DashBoardViewModel.cs" />
+    <Compile Include="ViewModel\VMJoystic.cs" />
     <Compile Include="View\Connection.xaml.cs">
       <DependentUpon>Connection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\controlJOYSTIC.xaml.cs">
+      <DependentUpon>controlJOYSTIC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\dashboard.xaml.cs">
+      <DependentUpon>dashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DataInvestigation.xaml.cs">
       <DependentUpon>DataInvestigation.xaml</DependentUpon>
@@ -110,6 +118,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\Joystic.xaml.cs">
+      <DependentUpon>Joystic.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Slider.xaml.cs">
+      <DependentUpon>Slider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SliderButtonsControl.xaml.cs">
+      <DependentUpon>SliderButtonsControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +171,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\controlJOYSTIC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\dashboard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\DataInvestigation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,6 +198,18 @@
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Joystic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Slider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SliderButtonsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="playback_small.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="backgrounds\controls.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
