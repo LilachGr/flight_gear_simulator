@@ -42,7 +42,7 @@ namespace ADP2_FLIGHTGEAR.View
             {
                 MessageBox.Show("connected successfully");
                 FlyWindow fly = new FlyWindow(vm, vmJoy, vmDash);
-                fly.DataContext = this;
+                //fly.DataContext = this;
                 fly.Show();
                 this.Close();
             } else

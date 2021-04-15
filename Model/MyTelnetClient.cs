@@ -127,8 +127,6 @@ namespace flight_gear_simulator.Model
                 model.UpdateDataLive(line);
                 Thread.Sleep(100);
             }
-
-
         }
 
 

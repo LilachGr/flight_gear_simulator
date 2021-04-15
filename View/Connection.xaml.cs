@@ -54,7 +54,7 @@ namespace flight_gear_simulator
             {
                 MessageBox.Show("connected successfully");
                 FlyWindow fly = new FlyWindow(vm,vmJoy,vmDash);
-                fly.DataContext = this;
+                //fly.DataContext = this;
                 fly.Show();
                 this.Close();
             }

@@ -15,7 +15,7 @@ namespace flight_gear_simulator.Model
         //connect to server
         List<List<float>> GetData();
         // is stoped loop
-         bool IsStopedLoop { get; set; }
+        bool IsStopedLoop { get; set; }
         void Connect();
         //start the fly
         void Start1();

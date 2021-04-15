@@ -46,11 +46,11 @@ namespace flight_gear_simulator
 
         private void Button_JustCsvFlyOption(object sender, RoutedEventArgs e)
         {
-            if (isFlyStarted)
+            /*if (isFlyStarted)
             {
                 vm.VM_disconnect();
                 isFlyStarted = false;
-            }
+            }*/
             isFlyStarted = true;
             controler.VM_ViewModel = vm;
             controler.DataContext = vm;
@@ -73,7 +73,7 @@ namespace flight_gear_simulator
                 MessageBox.Show("Started the flight in the FlightGear application!");
             }
             else {
-                vm.VM_SetIndex = 0;                
+                vm.VM_SetIndex = 0;
             }
         }
 

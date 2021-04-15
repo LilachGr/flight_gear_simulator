@@ -113,7 +113,7 @@ namespace flight_gear_simulator.Model
             get { return this.DataFlight.Count; }
         }
         // start to fly by csv one time
-        public void Start1()
+      /*  public void Start1()
         {
             thread = new Thread(new ThreadStart(delegate ()
             {
@@ -121,7 +121,7 @@ namespace flight_gear_simulator.Model
             }));
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-        }
+        }*/
 
 
         public void Disconnect()
@@ -230,7 +230,7 @@ namespace flight_gear_simulator.Model
         /// </summary>
 
         //the loop
-        public void start1()
+        public void Start1()
         {
             thread = new Thread(new ThreadStart(delegate ()
             {
@@ -240,6 +240,7 @@ namespace flight_gear_simulator.Model
                     if (setIndex < DataFlight.Count)
                     {
                         this.telnetClient.Write(DataFlight[setIndex] + "\n");
+                        UpdateDataLive(DataFlight[setIndex]);
                         SetIndex++;
                         Setindxo = SetIndex.ToString();
                         setTime();
@@ -259,14 +260,11 @@ namespace flight_gear_simulator.Model
                     if (PauseUnitlStart)
                     {
                         AirPlainStop_Start.WaitOne();
-
                     }
-
-
                 }
             }));
+            thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-
         }
 
 
