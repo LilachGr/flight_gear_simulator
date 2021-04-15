@@ -30,7 +30,7 @@ we use .NET framework version 4.
 use flightgear 2020 the last version.
 Dll for anomaly detection and correlation of features(stories 7-9), should be loaded from Git project's "plugins" folder: plugins\RegressionBasedAlgorithm.dll
 It was compied for Debug x64 runs - so your main project must run with that.
-The code also uses package OxyPlot.Core.2.0.0 for showing the graphs.
+The code also uses package OxyPlot.Core.2.0.0 for showing the graphs- it is a NuGet package, you should install these Nuget packages: OxyPlot.Core, OxyPlot.Wpf
 
 //THE Uml is an a pdf file
 contains just the classes we have a large numbers of functions and properties we cant put them... .
