@@ -267,12 +267,6 @@ namespace flight_gear_simulator.Model
             thread.Start();
         }
 
-
-
-
-
-       
-
         public void EnqueueMsg(double val, string message)
         {
             throw new NotImplementedException();
@@ -548,6 +542,15 @@ namespace flight_gear_simulator.Model
             return this.dllFunc.Dll_GetCorrelatedFeature(this.PtrForDll, feature);
         }
 
+        public float[] GetRegressionLine(string feature)
+        {
+            float[] ans = this.dllFunc.Dll_GetRegressionLine(this.PtrForDll, feature);
+            if (ans == null)
+            {
+                isDllHasProblem = false;
+            }
+            return ans;
+        }
 
         // JOYSTIC//
         ////// Joystick //////

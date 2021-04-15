@@ -54,6 +54,8 @@ namespace flight_gear_simulator.ViewModel
             PlotCorrelatedGraph = new PlotModel();
 
             PlotBothFeaturesGraph.ResetAllAxes();
+            LineRegression.Points.Clear();
+            LineRegression.ClearSelection();
             LineSerieBothFeatures.Points.Clear();
             LineSerieBothFeatures.ClearSelection();
             PlotBothFeaturesGraph.Series.Clear();
@@ -62,12 +64,6 @@ namespace flight_gear_simulator.ViewModel
 
         public void SetUpModelBasicGraph()
         {
-            PlotBasicGraph.LegendTitle = "The Basic Graph";
-            PlotBasicGraph.LegendOrientation = LegendOrientation.Horizontal;
-            PlotBasicGraph.LegendPlacement = LegendPlacement.Outside;
-            PlotBasicGraph.LegendPosition = LegendPosition.TopCenter;
-            PlotBasicGraph.LegendBackground = OxyColors.LightBlue;
-            PlotBasicGraph.LegendBorder = OxyColors.LightBlue;
             PlotBasicGraph.Background = OxyColors.LightBlue;
 
             var dateAxis = new DateTimeAxis() {StringFormat = "HH:mm:ss", MajorGridlineStyle = LineStyle.Solid, Title = "Time", MinorGridlineStyle = LineStyle.Dot, Position = AxisPosition.Bottom };
@@ -78,12 +74,6 @@ namespace flight_gear_simulator.ViewModel
         }
 
         public void SetUpModelCorrelatedGraph() {
-            PlotCorrelatedGraph.LegendTitle = "The Correlated Graph";
-            PlotCorrelatedGraph.LegendOrientation = LegendOrientation.Horizontal;
-            PlotCorrelatedGraph.LegendPlacement = LegendPlacement.Outside;
-            PlotCorrelatedGraph.LegendPosition = LegendPosition.TopCenter;
-            PlotCorrelatedGraph.LegendBackground = OxyColors.LightBlue;
-            PlotCorrelatedGraph.LegendBorder = OxyColors.LightBlue;
             PlotCorrelatedGraph.Background = OxyColors.LightBlue;
 
             var dateAxis = new DateTimeAxis() { StringFormat = "HH:mm:ss", MajorGridlineStyle = LineStyle.Solid, Title = "Time", MinorGridlineStyle = LineStyle.Dot, Position = AxisPosition.Bottom };
@@ -95,24 +85,29 @@ namespace flight_gear_simulator.ViewModel
 
         public void SetUpModelBothFeaturesGraph()
         {
-            PlotBothFeaturesGraph.LegendTitle = "Both Features Graph";
-            PlotBothFeaturesGraph.LegendOrientation = LegendOrientation.Horizontal;
-            PlotBothFeaturesGraph.LegendPlacement = LegendPlacement.Outside;
-            PlotBothFeaturesGraph.LegendPosition = LegendPosition.TopCenter;
-            PlotBothFeaturesGraph.LegendBackground = OxyColors.LightBlue;
-            PlotBothFeaturesGraph.LegendBorder = OxyColors.LightBlue;
             PlotBothFeaturesGraph.Background = OxyColors.LightBlue;
 
             var valueAxisX = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = ChosenValue, Position = AxisPosition.Bottom };
             PlotBothFeaturesGraph.Axes.Add(valueAxisX);
             var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = VMGetCorrelatedValue() };
             PlotBothFeaturesGraph.Axes.Add(valueAxisY);
+            PlotBothFeaturesGraph.Series.Add(LineRegression);
             PlotBothFeaturesGraph.Series.Add(LineSerieBothFeatures);
+            PlotBothFeaturesGraph.Series.Add(Line30LastPoints);
         }
 
         public void UpdateOldDataBothFeaturesGraph()
         {
             LineSerieBothFeatures.Points.Clear();
+           //{ startX, startY, endX, endY}
+            float[] linePoints = model.GetRegressionLine(ChosenValue);
+            if(linePoints == null)
+            {
+                return;
+            }
+            LineRegression.Points.Add(new DataPoint(linePoints[0], linePoints[2]));
+            LineRegression.Points.Add(new DataPoint(linePoints[1], linePoints[3]));
+
             List<List<(DateTime, float)>> allData = model.GetLiveData();
             int sizeAllData = allData.Count;
             if (sizeAllData <= 0)
@@ -127,6 +122,36 @@ namespace flight_gear_simulator.ViewModel
             for (int i = 0; i < sizeAllData; i++)
             {
                 LineSerieBothFeatures.Points.Add(new DataPoint(allData[i][this.ChosenValusIndex].Item2, allData[i][correlatedIndex].Item2));
+            }
+        }
+
+        public void Update30LastPoints()
+        {
+            Line30LastPoints.Points.Clear();
+            List<List<(DateTime, float)>> allData = model.GetLiveData();
+            int sizeAllData = allData.Count;
+            if (sizeAllData <= 0)
+            {
+                return;
+            }
+            int correlatedIndex = this.model.GetCorrelatedIndex(ChosenValue);
+            if (correlatedIndex == -1)
+            {
+                return;
+            }
+            if (sizeAllData > 30)
+            {
+                for (int i = sizeAllData - 30; i < sizeAllData; i++)
+                {
+                    Line30LastPoints.Points.Add(new DataPoint(allData[i][this.ChosenValusIndex].Item2, allData[i][correlatedIndex].Item2));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < sizeAllData; i++)
+                {
+                    Line30LastPoints.Points.Add(new DataPoint(allData[i][this.ChosenValusIndex].Item2, allData[i][correlatedIndex].Item2));
+                }
             }
         }
 
@@ -166,24 +191,38 @@ namespace flight_gear_simulator.ViewModel
 
         private LineSeries LineSerieBothFeatures = new LineSeries
         {
+            //StrokeThickness = 2,
+            Color = OxyColors.DarkBlue,
+            LineStyle = LineStyle.None,
+            MarkerSize = 2,
+            MarkerFill = OxyColors.Gray,
+            MarkerType = MarkerType.Circle,
+            CanTrackerInterpolatePoints = false,
+        };
+
+        private LineSeries Line30LastPoints = new LineSeries
+        {
+            //StrokeThickness = 2,
+            //Color = OxyColors.DarkBlue,
+            LineStyle = LineStyle.None,
+            MarkerSize = 2,
+            MarkerFill = OxyColors.Red,
+            MarkerType = MarkerType.Circle,
+            CanTrackerInterpolatePoints = false,
+        };
+
+        private LineSeries LineRegression = new LineSeries
+        {
             StrokeThickness = 2,
             Color = OxyColors.DarkBlue,
-            //MarkerStroke = OxyColors.DarkBlue,
-            //MarkerFill = OxyColors.DarkBlue,
-            //MarkerType = MarkerType.Circle,
             CanTrackerInterpolatePoints = false,
-            // Title = string.Format("Detector {0}", data.Key),
         };
 
         private LineSeries LineSerieCorrelated = new LineSeries
         {
             StrokeThickness = 2,
             Color = OxyColors.DarkBlue,
-            //MarkerStroke = OxyColors.DarkBlue,
-            //MarkerFill = OxyColors.DarkBlue,
-            //MarkerType = MarkerType.Circle,
             CanTrackerInterpolatePoints = false,
-            // Title = string.Format("Detector {0}", data.Key),
         };
 
         private LineSeries LineSerie = new LineSeries
@@ -219,6 +258,7 @@ namespace flight_gear_simulator.ViewModel
             {
                 float LastDataY = model.GetLiveData().Last()[index].Item2;
                 LineSerieBothFeatures.Points.Add(new DataPoint(LastDataX, LastDataY));
+                Update30LastPoints();
                 PlotBothFeaturesGraph.InvalidatePlot(true);
             }
         }
@@ -413,19 +453,16 @@ namespace flight_gear_simulator.ViewModel
             }
             else
             {
-                if (ChosenValusIndex != valueIndex)
-                {
-                    PlotCorrelatedGraph.Axes[1].Title = VMGetCorrelatedValue();
-                    PlotBothFeaturesGraph.Axes[0].Title = ChosenValue;
-                    PlotBothFeaturesGraph.Axes[1].Title = VMGetCorrelatedValue();
-                    ButtonChosenValueGraphPressed = true;
-                    //update the index in the vm
-                    ChosenValusIndex = valueIndex;
-                    //add all the data until now to the graph
-                    UpdateOldData();
-                    UpdateOldDataCorrelated();
-                    UpdateOldDataBothFeaturesGraph();
-                }
+                PlotCorrelatedGraph.Axes[1].Title = VMGetCorrelatedValue();
+                PlotBothFeaturesGraph.Axes[0].Title = ChosenValue;
+                PlotBothFeaturesGraph.Axes[1].Title = VMGetCorrelatedValue();
+                ButtonChosenValueGraphPressed = true;
+                //update the index in the vm
+                ChosenValusIndex = valueIndex;
+                //add all the data until now to the graph
+                UpdateOldData();
+                UpdateOldDataCorrelated();
+                UpdateOldDataBothFeaturesGraph();
             }
         }
         public void VM_SetIndexToBack()
@@ -465,8 +502,5 @@ namespace flight_gear_simulator.ViewModel
                 model.changeSpeed(value);
             }
         }
-
-
-
     }
 }

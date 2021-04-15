@@ -16,7 +16,6 @@ namespace ADP2_FLIGHTGEAR.Model
         //return -1 when error happen.
         int Dll_GetCorrelatedFeature(IntPtr myCF, string feature);
 
-
         //get MyCorrelatedFeature class and a feature and return double array like that: {startX, startY, endX, endY}. 
         //return null when error happen.
         float[] Dll_GetRegressionLine(IntPtr myCF, string feature);

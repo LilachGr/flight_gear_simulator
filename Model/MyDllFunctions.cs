@@ -114,10 +114,10 @@ namespace ADP2_FLIGHTGEAR.Model
                 isSetAllCorrelatedFeature = false;
                 return null;
             }
-            if (!isSetAllCorrelatedFeature)
+            /*if (!isSetAllCorrelatedFeature)
             {
                 return null;
-            }
+            }*/
             IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetRegressionLine");
             if (pAddressOfFunctionToCall == IntPtr.Zero)
             {
@@ -125,6 +125,10 @@ namespace ADP2_FLIGHTGEAR.Model
             }
             GetRegressionLine getRegressionLine = (GetRegressionLine)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetRegressionLine));
             IntPtr pArray = getRegressionLine(myCF, feature);
+            if (pArray == IntPtr.Zero)
+            {
+                return null;
+            }
             float[] result = new float[4];
             Marshal.Copy(pArray, result, 0, 4);
             return result;

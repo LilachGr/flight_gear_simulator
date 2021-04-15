@@ -9,16 +9,17 @@
         Title="Data Investigation" Height="450" Width="800">
     <Grid>
         <Image Source="../backgrounds/low-angle-shot-airplane-descending-from-clouded-sky_181624-26225.jpg" Stretch="Fill"/>
+        
         <Grid >
-            <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="36,94,424,117" BorderBrush="DarkBlue" />
+            <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="418,76,10,199" BorderBrush="DarkBlue" />
         </Grid>
 
         <Grid >
-            <oxy:PlotView x:Name="CorrelatedGraph" Model ="{Binding PlotCorrelatedGraph}" Margin="402,66,28,195" BorderBrush="DarkBlue" />
+            <oxy:PlotView x:Name="CorrelatedGraph" Model ="{Binding PlotCorrelatedGraph}" Margin="420,251,10,10" BorderBrush="DarkBlue" />
         </Grid>
 
         <Grid >
-            <oxy:PlotView x:Name="BothFeaturesGraph" Model ="{Binding PlotBothFeaturesGraph}" Margin="402,243,28,10" BorderBrush="DarkBlue" />
+            <oxy:PlotView x:Name="BothFeaturesGraph" Model ="{Binding PlotBothFeaturesGraph}" Margin="6,125,422,27" BorderBrush="DarkBlue" />
         </Grid>
 
         <Button x:Name="chosenValue" Content="Change value" Margin="430,18,269.333,362.667" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
@@ -26,5 +27,9 @@
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="251,26,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="0.441,2.636"/>
         <Label x:Name="label" Content="Choose value:" HorizontalAlignment="Left" Margin="74,10,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" Foreground="White"/>
         <Label x:Name="label_Copy" Content="Choose value:" HorizontalAlignment="Left" Margin="74,14,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" />
+        <Label x:Name="basic" Content="Both Correlated Features" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="34,88,0,0" FontWeight="Bold" FontSize="15" Width="197"/>
+        <Label x:Name="correlated" Content="Correlated Graph" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="636,222,0,0" FontWeight="Bold" FontSize="15" Foreground="White"/>
+        <Label x:Name="both" Content="Basic Graph" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="652,49,0,0" FontWeight="Bold" FontSize="15" Foreground="White"/>
+
     </Grid>
 </Window>

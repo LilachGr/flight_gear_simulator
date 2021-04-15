@@ -41,10 +41,13 @@ namespace flight_gear_simulator.Model
         //get the correlated value of specific feature
         string GetCorrelatedValue(string feature);
         int GetCorrelatedIndex(string feature);
+        //get MyCorrelatedFeature class and a feature and return double array like that: {startX, startY, endX, endY}. 
+        //return null when error happen.
+        float[] GetRegressionLine(string feature);
 
 
-        //connection
-         Thread myThread { get; }
+    //connection
+    Thread myThread { get; }
         int Port { get; set; }
         string Ip { get; set; }
         bool CorrectCSV { get; }
@@ -91,8 +94,6 @@ namespace flight_gear_simulator.Model
         //joystic
         ////// Joystick //////
 
-
-
         //property of the Aileron 
          float Aileron { get; set; }
         //property of the Elevator
@@ -107,8 +108,5 @@ namespace flight_gear_simulator.Model
         float updateElement(string feature);
         // get the features from the xaml
         void Xmlfeatures(string path);
-  
-
-
     }
 }

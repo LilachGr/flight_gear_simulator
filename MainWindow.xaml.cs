@@ -42,10 +42,28 @@ namespace flight_gear_simulator
 
         private void Button_UploadCsv(object sender, RoutedEventArgs e)
         {
+            if (vm.VMCsvPath == null || vm.VMxmlpath == null)
+            {
+                MessageBox.Show("Please enter csv and xml files!");
+                return;
+            }
+            string str = vm.VMCsvPath.Substring(vm.VMCsvPath.Length - 4);
+            if (!String.Equals(".csv", str))
+            {
+                MessageBox.Show("Error!" + "\n" + "choose correct csv file path!");
+                return;
+            }
+            string str2 = vm.VMxmlpath.Substring(vm.VMxmlpath.Length - 4);
+            if (!String.Equals(".xml", str2))
+            {
+                MessageBox.Show("Error!" + "\n" + "choose correct xml file path!");
+                return;
+            }
+            vm.SetValuesXML();
             vm.UploadPath();
             if (vm.VMcorrectCsv()&&vm.VMcorrectXml())
             {
-                MessageBox.Show("csv uploaded successfuly");
+                MessageBox.Show("Uploaded successfuly");
                 Connection menu = new Connection(this.vm,this.vmjoy,this.vmdash);
 
                 menu.DataContext = vm;
@@ -103,9 +121,7 @@ namespace flight_gear_simulator
                 xmlName = xmlName.Substring(1); //delete the ;
                 textxml.Text = xmlName; 
                 vm.VMxmlpath = textxml.Text;
-
             }
-            vm.SetValuesXML();
         }
     }
 }

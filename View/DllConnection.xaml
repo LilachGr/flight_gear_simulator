@@ -11,14 +11,14 @@
         <Button x:Name="con" Content="connect" HorizontalAlignment="Left" Margin="337,273,0,0" VerticalAlignment="Top" Width="143" Height="42" Click="Button_Connect" FontSize="20"/>
 
         <Button x:Name="chooseDllFile"  Content="choose dll file" HorizontalAlignment="Left" Margin="337,52,0,0" VerticalAlignment="Top" Width="111" CommandParameter="{Binding DllAdr}"  Click="Button_ChooseDllFile"/>
-       <!-- <Label Content="Enter Dll address:" HorizontalAlignment="Left" Margin="317,10,0,0" VerticalAlignment="Top" Height="53" Width="279" FontSize="20" FontWeight="Bold"/>-->
+        <!-- <Label Content="Enter Dll address:" HorizontalAlignment="Left" Margin="317,10,0,0" VerticalAlignment="Top" Height="53" Width="279" FontSize="20" FontWeight="Bold"/>-->
         <TextBox x:Name="dllAdr" HorizontalAlignment="Left" Height="29" Margin="180,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="428" Text="{Binding DllAdr}"/>
 
         <Button x:Name="chooseCsvFile"  Content="choose csv file" HorizontalAlignment="Left" Margin="189,153,0,0" VerticalAlignment="Top" Width="111" CommandParameter="{Binding CsvLearnPath}"  Click="Button_ChooseCsvFile"/>
         <!--  <Label Content="Enter csv file for learning normal mode:" HorizontalAlignment="Left" Margin="57,120,0,0" VerticalAlignment="Top" Height="53" Width="391" FontSize="20" FontWeight="Bold"/>-->
         <TextBox x:Name="csvFile" HorizontalAlignment="Left" Height="29" Margin="98,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="316" Text="{Binding CsvLearnPath}"/>
 
-        <Label Content="Enter threshold:" HorizontalAlignment="Left" Margin="561,126,0,0" VerticalAlignment="Top" Height="53" Width="201" FontSize="20" FontWeight="Bold"/>
+        <Label Content="Enter threshold" HorizontalAlignment="Left" Margin="596,153,0,0" VerticalAlignment="Top" Height="32" Width="118" FontSize="14" FontWeight="Bold"/>
         <TextBox x:Name="threshold" HorizontalAlignment="Left" Height="29" Margin="561,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="184" Text="{Binding Threshold}"/>
 
     </Grid>
