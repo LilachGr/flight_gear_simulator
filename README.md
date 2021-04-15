@@ -32,8 +32,8 @@ Dll for anomaly detection and correlation of features(stories 7-9), should be lo
 It was compied for Debug x64 runs - so your main project must run with that.
 The code also uses package OxyPlot.Core.2.0.0 for showing the graphs- it is a NuGet package, you should install these Nuget packages: OxyPlot.Core, OxyPlot.Wpf
 
-//THE Uml is an a pdf file
-contains just the classes we have a large numbers of functions and properties we cant put them... .
+//The Uml is an a pdf file
+that contains just the classes that we have a large numbers of functions in them and properties we cant put in them.
 
 
 
