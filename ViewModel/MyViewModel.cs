@@ -1,4 +1,5 @@
-﻿using flight_gear_simulator.Model;
+﻿using ADP2_FLIGHTGEAR.Model;
+using flight_gear_simulator.Model;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -20,6 +21,7 @@ namespace flight_gear_simulator.ViewModel
         private PlotModel plotBasicGraph;
         private PlotModel plotCorrelatedGraph;
         private PlotModel plotBothFeaturesGraph;
+        private PlotModel plotAnomaliesGraph;
 
         public MyViewModel(IModel model)
         {
@@ -27,6 +29,7 @@ namespace flight_gear_simulator.ViewModel
             PlotBasicGraph = new PlotModel();
             plotCorrelatedGraph = new PlotModel();
             plotBothFeaturesGraph = new PlotModel();
+            plotAnomaliesGraph = new PlotModel();
             model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 if (e.PropertyName != "liveData")
                 {
@@ -60,6 +63,10 @@ namespace flight_gear_simulator.ViewModel
             LineSerieBothFeatures.ClearSelection();
             PlotBothFeaturesGraph.Series.Clear();
             PlotBothFeaturesGraph = new PlotModel();
+
+            plotBasicGraph.InvalidatePlot(true);
+            PlotCorrelatedGraph.InvalidatePlot(true);
+            PlotBothFeaturesGraph.InvalidatePlot(true);
         }
 
         public void SetUpModelBasicGraph()
@@ -99,14 +106,18 @@ namespace flight_gear_simulator.ViewModel
         public void UpdateOldDataBothFeaturesGraph()
         {
             LineSerieBothFeatures.Points.Clear();
+            Line30LastPoints.Points.Clear();
+            LineRegression.Points.Clear();
            //{ startX, startY, endX, endY}
             float[] linePoints = model.GetRegressionLine(ChosenValue);
             if(linePoints == null)
             {
                 return;
             }
-            LineRegression.Points.Add(new DataPoint(linePoints[0], linePoints[2]));
-            LineRegression.Points.Add(new DataPoint(linePoints[1], linePoints[3]));
+            //LineRegression.Points.Add(new DataPoint(linePoints[0], linePoints[2]));
+            //LineRegression.Points.Add(new DataPoint(linePoints[1], linePoints[3]));
+            LineRegression.Points.Add(new DataPoint(linePoints[0], linePoints[1]));
+            LineRegression.Points.Add(new DataPoint(linePoints[2], linePoints[3]));
 
             List<List<(DateTime, float)>> allData = model.GetLiveData();
             int sizeAllData = allData.Count;
@@ -213,7 +224,7 @@ namespace flight_gear_simulator.ViewModel
 
         private LineSeries LineRegression = new LineSeries
         {
-            StrokeThickness = 2,
+            StrokeThickness = 3,
             Color = OxyColors.DarkBlue,
             CanTrackerInterpolatePoints = false,
         };
@@ -247,7 +258,7 @@ namespace flight_gear_simulator.ViewModel
                 (DateTime, float) LastData = model.GetLiveData().Last()[index];
                 LineSerieCorrelated.Points.Add(new DataPoint(DateTimeAxis.ToDouble(LastData.Item1), LastData.Item2));
                 PlotCorrelatedGraph.InvalidatePlot(true);
-            }
+            } 
         }
 
         public void UpdateModelBothFeaturesGraph()
@@ -301,6 +312,20 @@ namespace flight_gear_simulator.ViewModel
                 }
             }
         }
+
+        public PlotModel PlotAnomaliesGraph
+        {
+            get { return plotAnomaliesGraph; }
+            set
+            {
+                plotAnomaliesGraph = value;
+                if (model.GetLiveData().Count() > 0)
+                {
+                    NotifyPropertyChanged("VM_PlotAnomaliesGraph");
+                }
+            }
+        }
+
         //property to bind data with the textbox
         public string VMCsvPath { get; set; }
         public string VMxmlpath { get; set; }
@@ -361,8 +386,6 @@ namespace flight_gear_simulator.ViewModel
             set
             {
                 this.model.SetIndex = value;
-
-
             }
         }
         public string VMGetCorrelatedValue()
@@ -380,8 +403,6 @@ namespace flight_gear_simulator.ViewModel
                 return this.model.csvSize;
             }
         }
-
-
 
         // initialize the model ip
         public void ModelIP()
@@ -453,14 +474,29 @@ namespace flight_gear_simulator.ViewModel
             }
             else
             {
-                PlotCorrelatedGraph.Axes[1].Title = VMGetCorrelatedValue();
-                PlotBothFeaturesGraph.Axes[0].Title = ChosenValue;
-                PlotBothFeaturesGraph.Axes[1].Title = VMGetCorrelatedValue();
+                PlotBasicGraph.Axes[1].Title = ChosenValue;
                 ButtonChosenValueGraphPressed = true;
                 //update the index in the vm
                 ChosenValusIndex = valueIndex;
                 //add all the data until now to the graph
                 UpdateOldData();
+                if (VMGetCorrelatedValue() == null) {
+                    PlotCorrelatedGraph.Axes[1].Title = "null";
+                    PlotBothFeaturesGraph.Axes[0].Title = "null";
+                    PlotBothFeaturesGraph.Axes[1].Title = "null";
+                    LineSerieBothFeatures.Points.Clear();
+                    Line30LastPoints.Points.Clear();
+                    LineRegression.Points.Clear();
+                    LineSerieCorrelated.Points.Clear();
+                    PlotCorrelatedGraph.InvalidatePlot(true);
+                    PlotBothFeaturesGraph.InvalidatePlot(true);
+                    return; 
+                }
+               
+                PlotCorrelatedGraph.Axes[1].Title = VMGetCorrelatedValue();
+                PlotBothFeaturesGraph.Axes[0].Title = ChosenValue;
+                PlotBothFeaturesGraph.Axes[1].Title = VMGetCorrelatedValue();
+               
                 UpdateOldDataCorrelated();
                 UpdateOldDataBothFeaturesGraph();
             }
@@ -476,14 +512,11 @@ namespace flight_gear_simulator.ViewModel
         public void VM_Pause()
         {
             this.model.Pause();
-
         }
         //play the video
         public void VM_Play()
         {
-
             this.model.Play();
-
         }
 
         public Thread myThread()
@@ -491,15 +524,173 @@ namespace flight_gear_simulator.ViewModel
            return this.model.myThread;
         }
 
-        /// <summary>
-        /// CHANGING IN THREAD SLEEP
-        /// </summary>
+        // CHANGING IN THREAD SLEEP
         public double VM_speedsend
         {
             get { return model.Speedsend; }
             set
             {
                 model.changeSpeed(value);
+            }
+        }
+
+        public void DisconnectDetectRegression()
+        {
+            plotAnomaliesGraph.ResetAllAxes();
+            LineSerieAnomalyLine.Points.Clear();
+            LineSerieAnomalyLine.ClearSelection();
+            LineSerieAnomalyGraphAllPoints.Points.Clear();
+            LineSerieAnomalyGraphAllPoints.ClearSelection();
+            LineSerieAnomalyPoints.Points.Clear();
+            LineSerieAnomalyPoints.ClearSelection();
+
+            plotAnomaliesGraph.Series.Clear();
+            plotAnomaliesGraph = new PlotModel();
+            plotAnomaliesGraph.InvalidatePlot(true);
+            
+            model.DeleteFileNameOfAllAnomalies();
+        }
+
+        public List<string> GetAllAnomalies()
+        {
+            if (VMCsvPath == null)
+            {
+                return null;
+            }
+            int isWithNoProblem = model.GetAnomalies(VMCsvPath);
+            if (isWithNoProblem == 0)
+            {
+                return null;
+            }
+            return model.GetAllAnomalies();
+        }
+      
+        //property to bind if the Button pressed
+        public bool ButtonChosenAnomalyGraphPressed { get; set; }
+
+        private LineSeries LineSerieAnomalyGraphAllPoints = new LineSeries
+        {
+            //StrokeThickness = 2,
+            Color = OxyColors.DarkBlue,
+            LineStyle = LineStyle.None,
+            MarkerSize = 1,
+            MarkerFill = OxyColors.Gray,
+            MarkerType = MarkerType.Circle,
+            CanTrackerInterpolatePoints = false,
+        };
+
+        private LineSeries LineSerieAnomalyPoints = new LineSeries
+        {
+            //StrokeThickness = 2,
+            //Color = OxyColors.DarkBlue,
+            LineStyle = LineStyle.None,
+            MarkerSize = 1,
+            MarkerFill = OxyColors.Red,
+            MarkerType = MarkerType.Circle,
+            CanTrackerInterpolatePoints = false,
+        };
+
+        private LineSeries LineSerieAnomalyLine = new LineSeries
+        {
+            /////////////////////////////////////////////////////
+            //we need to seperate if we are in circle or line
+            StrokeThickness = 3,
+            Color = OxyColors.DarkBlue,
+            CanTrackerInterpolatePoints = false,
+            ////////////////////////////////////////////////////
+        };
+
+        public void SetUpModelAnomaliesGraph() {
+            PlotAnomaliesGraph.Background = OxyColors.LightBlue;
+
+            var valueAxisX = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null", Position = AxisPosition.Bottom };
+            PlotAnomaliesGraph.Axes.Add(valueAxisX);
+            var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null" };
+            PlotAnomaliesGraph.Axes.Add(valueAxisY);
+            PlotAnomaliesGraph.Series.Add(LineSerieAnomalyLine);
+            PlotAnomaliesGraph.Series.Add(LineSerieAnomalyGraphAllPoints);
+            PlotAnomaliesGraph.Series.Add(LineSerieAnomalyPoints);
+        }
+
+        private int GetIndexAcorrdingToFeature(string feature)
+        {
+            int valueIndex = -1;
+            if (model.GetXmlValue().Count() > 0)
+            {
+                if (model.GetXmlValue().ContainsKey(feature))
+                {
+                    valueIndex = model.GetXmlValue()[feature];
+                }
+            }
+            return valueIndex;
+        }
+
+        private AnomalyInfo Anomaly { get; set; }
+
+        public void UpdateModelAnomaliesGraph() {
+            LineSerieAnomalyLine.Points.Clear();
+            LineSerieAnomalyGraphAllPoints.Points.Clear();
+            LineSerieAnomalyPoints.Points.Clear();
+            if (Anomaly == null)
+            {
+                return;
+            }
+            ///////////////////////////////////////
+            //{ startX, startY, endX, endY}
+            float[] linePoints = model.GetRegressionLine(Anomaly.Feature1);
+            if (linePoints == null)
+            {
+                return;
+            }
+            LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[0], linePoints[1]));
+            LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[2], linePoints[3]));
+            ////////////////////////////////////////
+            List<List<float>> allData = model.GetData();
+            int sizeAllData = allData.Count;
+            if (sizeAllData <= 0)
+            {
+                return;
+            }
+            int indexFeature1 = GetIndexAcorrdingToFeature(Anomaly.Feature1);
+            int indexFeature2 = GetIndexAcorrdingToFeature(Anomaly.Feature2);
+            List <long> allAnomaliesIndex = model.GetAnomaliesSameFeatures(Anomaly);
+            if (indexFeature2 == -1 || indexFeature1 == -1 || allAnomaliesIndex == null)
+            {
+                return;
+            }
+            for (int i = 0; i < sizeAllData; i++)
+            {
+                if (allAnomaliesIndex.Contains(i))
+                {
+                    LineSerieAnomalyPoints.Points.Add(new DataPoint(allData[i][indexFeature1], allData[i][indexFeature2]));
+                }
+                else
+                {
+                    LineSerieAnomalyGraphAllPoints.Points.Add(new DataPoint(allData[i][indexFeature1], allData[i][indexFeature2]));
+                }
+            }
+            PlotAnomaliesGraph.InvalidatePlot(true);
+        }
+
+        public void AnomalyGraphButton(int indexOfCosenAnomaly)
+        {
+            ButtonChosenAnomalyGraphPressed = true;
+            Anomaly = model.GetSpecificAnomaly(indexOfCosenAnomaly);
+            //for display we need the names of the features
+            if (Anomaly == null) {
+                PlotAnomaliesGraph.Axes[1].Title = "null";
+                PlotAnomaliesGraph.Axes[0].Title = "null";
+                LineSerieAnomalyLine.Points.Clear();
+                LineSerieAnomalyGraphAllPoints.Points.Clear();
+                LineSerieAnomalyPoints.Points.Clear();
+                PlotAnomaliesGraph.InvalidatePlot(true);
+                ButtonChosenAnomalyGraphPressed = false;
+                return;
+            }
+            else {
+                PlotAnomaliesGraph.Axes[0].Title = Anomaly.Feature1;
+                PlotAnomaliesGraph.Axes[1].Title = Anomaly.Feature2;
+                UpdateModelAnomaliesGraph();
             }
         }
     }

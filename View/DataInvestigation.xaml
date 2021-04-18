@@ -9,7 +9,7 @@
         Title="Data Investigation" Height="450" Width="800">
     <Grid>
         <Image Source="../backgrounds/low-angle-shot-airplane-descending-from-clouded-sky_181624-26225.jpg" Stretch="Fill"/>
-        
+
         <Grid >
             <oxy:PlotView x:Name="BasicGraph" Model ="{Binding PlotBasicGraph}" Margin="418,76,10,199" BorderBrush="DarkBlue" />
         </Grid>
@@ -22,14 +22,15 @@
             <oxy:PlotView x:Name="BothFeaturesGraph" Model ="{Binding PlotBothFeaturesGraph}" Margin="6,125,422,27" BorderBrush="DarkBlue" />
         </Grid>
 
-        <Button x:Name="chosenValue" Content="Change value" Margin="430,18,269.333,362.667" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
+        <Button x:Name="chosenValue" Content="Change value" Margin="422,24,277,357" Click="Change_Value" Background="LightBlue" Foreground="DarkBlue"/>
         <Button Content="Return to the main" HorizontalAlignment="Left" Margin="644,18,0,0" VerticalAlignment="Top" Width="139" Click="Mainwindow_Click" Height="30" Background="Blue" Foreground="White"/>
-        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="251,26,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="0.441,2.636"/>
-        <Label x:Name="label" Content="Choose value:" HorizontalAlignment="Left" Margin="74,10,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" Foreground="White"/>
-        <Label x:Name="label_Copy" Content="Choose value:" HorizontalAlignment="Left" Margin="74,14,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" />
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="252,59,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="0.441,2.636"/>
+        <Label x:Name="label" Content="Choose value:" HorizontalAlignment="Left" Margin="252,10,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" Foreground="White"/>
+        <Label x:Name="label_Copy" Content="Choose value:" HorizontalAlignment="Left" Margin="252,14,0,0" VerticalAlignment="Top" Width="157" FontWeight="Bold" FontSize="24" />
         <Label x:Name="basic" Content="Both Correlated Features" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="34,88,0,0" FontWeight="Bold" FontSize="15" Width="197"/>
         <Label x:Name="correlated" Content="Correlated Graph" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="636,222,0,0" FontWeight="Bold" FontSize="15" Foreground="White"/>
         <Label x:Name="both" Content="Basic Graph" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="652,49,0,0" FontWeight="Bold" FontSize="15" Foreground="White"/>
+        <Button x:Name="DetectRegression" Content="Detect Regression" HorizontalAlignment="Left" VerticalAlignment="Top" Width="197" Margin="28,20,0,0" Height="36" Background="Blue" Foreground="White" Click="DetectRegression_Click"/>
 
     </Grid>
 </Window>

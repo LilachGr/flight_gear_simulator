@@ -86,6 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\AnomalyInfo.cs" />
     <Compile Include="Model\MyDllFunctions.cs" />
     <Compile Include="Model\IDllFunctions.cs" />
     <Compile Include="ViewModel\DashBoardViewModel.cs" />
@@ -101,6 +102,9 @@
     </Compile>
     <Compile Include="View\DataInvestigation.xaml.cs">
       <DependentUpon>DataInvestigation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DetectRegression.xaml.cs">
+      <DependentUpon>DetectRegression.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\DllConnection.xaml.cs">
       <DependentUpon>DllConnection.xaml</DependentUpon>
@@ -183,6 +187,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\DetectRegression.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DllConnection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -235,6 +243,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="backgrounds\controls.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="backgrounds\plane-passing-by-sun-cloudy-day_1286-143.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="backgrounds\airplane-flying-cloudy-sky_144627-132.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

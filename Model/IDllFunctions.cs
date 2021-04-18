@@ -20,6 +20,9 @@ namespace ADP2_FLIGHTGEAR.Model
         //return null when error happen.
         float[] Dll_GetRegressionLine(IntPtr myCF, string feature);
 
+        //get MyCorrelatedFeature class and add all the anomalies in the csvFileAnomaly to the file placeForAns. return 0 if failed otherwise return 1.
+        int Dll_GetAnomalies(IntPtr myCF, string csvFileAnomaly, string placeForAns);
+
         //disconnect from the dll
         void DllDisconnect();
 

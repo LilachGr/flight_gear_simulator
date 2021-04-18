@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ADP2_FLIGHTGEAR.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace flight_gear_simulator.Model
 {
     public interface IModel : INotifyPropertyChanged
     {
-        //connect to server
         List<List<float>> GetData();
         // is stoped loop
         bool IsStopedLoop { get; set; }
+        //connect to server
         void Connect();
         //start the fly
         void Start1();
@@ -23,7 +24,7 @@ namespace flight_gear_simulator.Model
         void Disconnect();
         //add a message to server to queue.
         void EnqueueMsg(double val, string message);
-         void pathsSet(string csvFormat, string xmlFormat);
+        void pathsSet(string csvFormat, string xmlFormat);
         void CsvpathSet(string value);
         //get the liveData list.
         List<List<(DateTime, float)>> GetLiveData();
@@ -44,10 +45,20 @@ namespace flight_gear_simulator.Model
         //get MyCorrelatedFeature class and a feature and return double array like that: {startX, startY, endX, endY}. 
         //return null when error happen.
         float[] GetRegressionLine(string feature);
-
+        //get MyCorrelatedFeature class and add all the anomalies in the csvFileAnomaly to the file placeForAns.
+        //Return 0 if failed otherwise return 1.
+        int GetAnomalies(string csvFileAnomaly);
+        // delete the FileNameOfAllAnomalies.
+        void DeleteFileNameOfAllAnomalies();
+        //return a list pf strings that contains all the anomalies.
+        List<string> GetAllAnomalies();
+        //get specific anomaly according to the index
+        AnomalyInfo GetSpecificAnomaly(int index);
+        //get all anomalies index that has same features
+        List<long> GetAnomaliesSameFeatures(AnomalyInfo anomaly);
 
     //connection
-    Thread myThread { get; }
+        Thread myThread { get; }
         int Port { get; set; }
         string Ip { get; set; }
         bool CorrectCSV { get; }

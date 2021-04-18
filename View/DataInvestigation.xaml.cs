@@ -77,5 +77,12 @@ namespace ADP2_FLIGHTGEAR.View
             main.Show();
             this.Close();
         }
+
+        private void DetectRegression_Click(object sender, RoutedEventArgs e)
+        {
+            DetectRegression investigation = new DetectRegression(vm, vmJoy, vmDash);
+            investigation.Show();
+            this.Close();
+        }
     }
 }

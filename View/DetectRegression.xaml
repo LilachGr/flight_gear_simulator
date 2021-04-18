@@ -1,0 +1,20 @@
+﻿<Window x:Class="ADP2_FLIGHTGEAR.View.DetectRegression"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADP2_FLIGHTGEAR.View"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="DetectRegression" Height="450" Width="800">
+    <Grid>
+        <Image Margin="0,0,-0.4,0" Source="../backgrounds/1307274.jpg" Stretch="Fill" Grid.ColumnSpan="2"/>
+        <Button Content="Return to the main" HorizontalAlignment="Left" Margin="644,18,0,0" VerticalAlignment="Top" Width="139" Click="Mainwindow_Click" Height="30" Background="Blue" Foreground="White"/>
+        <Label Content="The Anomalies" HorizontalAlignment="Left" Margin="29,52,0,0" VerticalAlignment="Top" Height="43" Width="166" FontSize="20" FontWeight="Bold" Foreground="White"/>
+        <ListBox x:Name="listAnomalies" HorizontalAlignment="Left" Height="212" Margin="29,95,0,0" VerticalAlignment="Top" Width="353"/>
+        <Grid >
+            <oxy:PlotView x:Name="AnomaliesGraph" Model ="{Binding PlotAnomaliesGraph}" Margin="410,80,18,85" BorderBrush="DarkBlue" />
+        </Grid>
+        <Button x:Name="chosenAnomaly" Content="Choose Anomaly" Margin="29,320,658,61" Click="choose_anomaly_button" Background="LightBlue" Foreground="DarkBlue"/>
+    </Grid>
+</Window>

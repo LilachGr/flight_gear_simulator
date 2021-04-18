@@ -13,8 +13,8 @@ using System.Xml;
 namespace flight_gear_simulator.Model
 {
     class MyModel : IModel
-    {
-        private List<List<float>> csvData;
+    {        
+        private List<List<float>> csvData; // all the data in the main csv file, each list is a line that contains all the float in the line
         private List<List<(DateTime, float)>> liveData = new List<List<(DateTime, float)>> ();
         private List<string> DataFlight = new List<string>(); // the data with the ","
         ITelnetClient telnetClient;
@@ -40,6 +40,8 @@ namespace flight_gear_simulator.Model
         public event PropertyChangedEventHandler PropertyChanged;
         //lists for the features
         List<float> listUpdated;
+        Dictionary<string, List<long>> AnomaliesPerLine = new Dictionary<string, List<long>>();
+        List<AnomalyInfo> allAnomalies = new List<AnomalyInfo>();
 
         public MyModel(ITelnetClient telnetClient)
         {
@@ -49,9 +51,6 @@ namespace flight_gear_simulator.Model
 
         public void NotifyPropertyChanged(string propName)
         {
-           // if (this.PropertyChanged != null)
-             //   this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
@@ -76,7 +75,6 @@ namespace flight_gear_simulator.Model
             get { return this.ip; }
             set
             {
-
                 this.ip = value;
                 NotifyPropertyChanged("Ip");
             }
@@ -101,28 +99,15 @@ namespace flight_gear_simulator.Model
             get { return this.setIndex; }
             set
             {
-
                 this.setIndex = value;
                 NotifyPropertyChanged("SetIndex");
-
-
             }
         }
+
         public int csvSize
         {
             get { return this.DataFlight.Count; }
         }
-        // start to fly by csv one time
-      /*  public void Start1()
-        {
-            thread = new Thread(new ThreadStart(delegate ()
-            {
-                this.telnetClient.Start(this.csvPath, this);
-            }));
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-        }*/
-
 
         public void Disconnect()
         {
@@ -132,6 +117,7 @@ namespace flight_gear_simulator.Model
                 this.telnetClient.Disconnect();
             }
         }
+
         public void SetIndexToBack()
         {
             if (setIndex > 10)
@@ -142,8 +128,8 @@ namespace flight_gear_simulator.Model
             {
                 setIndex = 0;
             }
-
         }
+
         public void SetIndextoFront()
         {
             if (setIndex <= DataFlight.Count)
@@ -151,9 +137,7 @@ namespace flight_gear_simulator.Model
 
                 setIndex += 10;
             }
-
         }           
-            
 
         public string Setindxo
         {
@@ -165,19 +149,21 @@ namespace flight_gear_simulator.Model
                 NotifyPropertyChanged("Setindxo");
             }
         }
+
         //pause the video
         public void Pause()
         {
             this.PauseUnitlStart = true;
             AirPlainStop_Start.Reset();
         }
+
         //play the video
         public void Play()
         {
             this.PauseUnitlStart = false;
             AirPlainStop_Start.Set();
-
         }
+
         private string time = "00:00:00";
         public string Time
             {
@@ -193,7 +179,6 @@ namespace flight_gear_simulator.Model
 
         }
 
-
         // The function sets the current time according to the index row which is screening in FG
         public void setTime()
         {
@@ -201,8 +186,8 @@ namespace flight_gear_simulator.Model
             int secends = (SetIndex / 10) % 60;
             int minutes = SetIndex / 600;
             Time = (minutes.ToString("D2")) + ":" + (secends.ToString("D2")) + ":" + ((miliSeconds * 10).ToString("D2"));
-
         }
+
         private int speedsend = 50;
         public int Speedsend
         {
@@ -225,16 +210,12 @@ namespace flight_gear_simulator.Model
         {
             get { return this.thread; }
         }
-        /// <summary>
-        /// 
-        /// </summary>
 
         //the loop
         public void Start1()
         {
             thread = new Thread(new ThreadStart(delegate ()
             {
-                
                 while (true)
                 {
                     if (setIndex < DataFlight.Count)
@@ -272,7 +253,6 @@ namespace flight_gear_simulator.Model
             throw new NotImplementedException();
         }
 
-
         private void ReadData()
         {
             try
@@ -306,7 +286,7 @@ namespace flight_gear_simulator.Model
             }
             catch (IOException)
             {
-                MessageBox.Show("Error!" + "\n" + "choose correct  files path!");
+                MessageBox.Show("Error!" + "\n" + "choose correct files path!");
                 this.correctCSV = false;
                 this.correctXML = false;
                 return;
@@ -336,7 +316,6 @@ namespace flight_gear_simulator.Model
         }
         public bool CorrectXml
         {
-
             get
             {
                 return this.correctXML;
@@ -413,7 +392,6 @@ namespace flight_gear_simulator.Model
                     xmlValuesInOrder.Add(text);
                     i++;
                 }
-               
             }
         }
         public Dictionary<string, int> GetXmlValue()
@@ -435,6 +413,7 @@ namespace flight_gear_simulator.Model
                 }
             }
         }
+
         //set the dll address
         public void DllConnect(string dllAdr, string csvLearnPath, float threshold)
         {
@@ -446,7 +425,12 @@ namespace flight_gear_simulator.Model
             isDllHasProblem = !this.dllFunc.IsDllConnected();
             if (!isDllHasProblem)
             {
-                string newCsvPath = CreateCsvWithTitle(csvLearnPath);
+                string newCsvPath = CreateCsvWithTitle(csvLearnPath, "csvLearnPathWithTitle.csv");
+                if (newCsvPath == null)
+                {
+                    isDllHasProblem = true;
+                    return;
+                }
                 PtrForDll = this.dllFunc.Dll_SetAllCorrelatedFeature(newCsvPath, threshold);
             }
             if (PtrForDll == IntPtr.Zero)
@@ -455,9 +439,8 @@ namespace flight_gear_simulator.Model
             }
         }
 
-        private string CreateCsvWithTitle(string csvLearnPath)
+        private string CreateCsvWithTitle(string csvLearnPath, string newCsvFile)
         {
-            string newCsvFile = "csvLearnPathWithTitle.csv";
             var csv = new StringBuilder();
             StreamReader readCsv;
             if (csvLearnPath == null)
@@ -469,7 +452,6 @@ namespace flight_gear_simulator.Model
                 string empty = null;
                 if (String.Equals(empty, csvLearnPath))
                 {
-                    MessageBox.Show("Error!" + "\n" + "choose correct csv file path!");
                     return null;
                 }
                 string csvfile = ".csv";
@@ -481,13 +463,11 @@ namespace flight_gear_simulator.Model
                 }
                 else
                 {
-                    MessageBox.Show("Error!" + "\n" + "choose correct csv file path!");
                     return null;
                 }
             }
             catch (IOException)
             {
-                MessageBox.Show("Error!" + "\n" + "choose correct csv file path!");
                 return null;
             }
             StringBuilder title = new StringBuilder();
@@ -537,6 +517,7 @@ namespace flight_gear_simulator.Model
             }
             return xmlValuesInOrder[index];
         }
+
         public int GetCorrelatedIndex(string feature)
         {
             return this.dllFunc.Dll_GetCorrelatedFeature(this.PtrForDll, feature);
@@ -552,10 +533,116 @@ namespace flight_gear_simulator.Model
             return ans;
         }
 
+        public string FileNameOfAllAnomalies { get; set; }
+
+        public int GetAnomalies(string csvFileAnomaly)
+        {
+            try
+            {
+                FileNameOfAllAnomalies = Path.GetTempFileName();
+                if(FileNameOfAllAnomalies == null)
+                {
+                    isDllHasProblem = true;
+                    return 0;
+                }
+            }
+            catch
+            {
+                isDllHasProblem = true;
+                return 0;
+            }
+            string newCsvPath = CreateCsvWithTitle(csvFileAnomaly, "csvAnomalyPathWithTitle.csv");
+            if (newCsvPath == null)
+            {
+                isDllHasProblem = true;
+                return 0;
+            }
+            return this.dllFunc.Dll_GetAnomalies(this.PtrForDll, newCsvPath, FileNameOfAllAnomalies);
+        }
+
+        public List<long> GetAnomaliesSameFeatures(AnomalyInfo anomaly)
+        {
+            if (AnomaliesPerLine.ContainsKey(anomaly.BothFeatures)){
+                return AnomaliesPerLine[anomaly.BothFeatures];
+            }
+            return null;
+        }
+
+        public AnomalyInfo GetSpecificAnomaly(int index)
+        {
+            if (index < 0 || index > allAnomalies.Count - 1) { return null; }
+            return allAnomalies[index];
+        }
+
+        public List<string> GetAllAnomalies()
+        {
+            allAnomalies.Clear();
+            AnomaliesPerLine.Clear();
+            if (FileNameOfAllAnomalies == null)
+            {
+                return null;
+            }
+            StreamReader readCsv;
+            try
+            {
+                readCsv = new StreamReader(FileNameOfAllAnomalies);
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+            string line;
+            string[] lineParam;
+            DateTime startTime;
+            DateTime timeLine;
+            long lineNum = 0; 
+            if (liveData.Count <= 0)
+            {
+                startTime = DateTime.Now;
+            }
+            else
+            {
+                startTime = liveData[0][0].Item1;
+            }
+            while ((line = readCsv.ReadLine()) != null)
+            {
+                AnomalyInfo anomaly  = new AnomalyInfo();
+                timeLine = startTime;
+                //line will be: [0] = feature 1, [1] = feature 2, [2] = line of anomalies.
+                lineParam = line.Split(',');
+                if (lineParam.Length < 3)
+                {
+                    return null;
+                }
+                lineNum = long.Parse(lineParam[2]);
+                anomaly.AnomalyLine = lineNum;
+                anomaly.Feature1 = lineParam[0];
+                anomaly.Feature2 = lineParam[1];
+                //design the line
+                line = lineParam[0] + " , " + lineParam[1] + " , " + (timeLine.AddMilliseconds(100* lineNum)).TimeOfDay.ToString();
+                anomaly.DisplayString = line;
+                allAnomalies.Add(anomaly);
+                anomaly.BothFeatures = lineParam[0] + "," + lineParam[1];
+                if (!AnomaliesPerLine.ContainsKey(anomaly.BothFeatures))
+                {
+                    AnomaliesPerLine[anomaly.BothFeatures] = new List<long>();
+                }
+                AnomaliesPerLine[anomaly.BothFeatures].Add(lineNum);
+            }
+            return allAnomalies.Select(a => a.DisplayString).ToList();
+        }
+
+        public void DeleteFileNameOfAllAnomalies()
+        {
+            if (FileNameOfAllAnomalies != null)
+            {
+                File.Delete(FileNameOfAllAnomalies);
+            }
+            FileNameOfAllAnomalies = null;
+        }
+
         // JOYSTIC//
         ////// Joystick //////
-
-
 
         //property of the Aileron 
         private float aileron = 125;
@@ -579,7 +666,6 @@ namespace flight_gear_simulator.Model
                 elevator = 125 + 100 * value;
                 NotifyPropertyChanged("Elevator");
             }
-
         }
 
         //property of the Rudder
@@ -595,7 +681,6 @@ namespace flight_gear_simulator.Model
                 rudder = value;
                 NotifyPropertyChanged("Rudder");
             }
-
         }
 
         //property of the throttle
@@ -611,7 +696,6 @@ namespace flight_gear_simulator.Model
                 throttle = value;
                 NotifyPropertyChanged("Throttle");
             }
-
         }
 
 
@@ -635,6 +719,7 @@ namespace flight_gear_simulator.Model
             }
             return listUpdated.ElementAt(index);
         }
+
         //get the features from the xml
         public void Xmlfeatures(string path)
         {
@@ -648,22 +733,6 @@ namespace flight_gear_simulator.Model
                xfeatures.Add(theName);
             }
         }
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-
-
-
-
-
-
-
-
-
-
         //DASHBOARD
 
         //property of the Airspeed
@@ -755,15 +824,5 @@ namespace flight_gear_simulator.Model
                 NotifyPropertyChanged("Altimeter");
             }
         }
-
-
-
-
-
-
-
-
-
-
     }
 }
