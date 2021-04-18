@@ -30,7 +30,19 @@ namespace ADP2_FLIGHTGEAR.Model
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr GetRegressionLine(IntPtr myCF, [MarshalAs(UnmanagedType.LPStr)] string feature);
 
-        private IntPtr pDll;
+         //get MyCorrelatedFeature class and add all the anomalies in the csvFileAnomaly to the file placeForAns. return 0 if failed otherwise return 1.
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetAnomalies(IntPtr myCF, [MarshalAs(UnmanagedType.LPStr)] string csvFileAnomaly, [MarshalAs(UnmanagedType.LPStr)] string placeForAns);
+
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetTypeDll();
+
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr GetRegressionCircle(IntPtr myCF, [MarshalAs(UnmanagedType.LPStr)] string feature);
+
+        private IntPtr pDll = IntPtr.Zero;
         private bool isSetAllCorrelatedFeature = false;
         private bool isConnected = false;
 
@@ -41,7 +53,14 @@ namespace ADP2_FLIGHTGEAR.Model
                 isConnected = false;
                 return;
             }
-            this.pDll = LoadLibrary(dllAdr);
+            try
+            {
+                this.pDll = LoadLibrary(dllAdr);
+            }
+            catch{
+                isConnected = false;
+                return;
+            }
             if (pDll != IntPtr.Zero)
             {
                 isConnected = true;
@@ -60,7 +79,7 @@ namespace ADP2_FLIGHTGEAR.Model
                 return IntPtr.Zero;
             }
             isSetAllCorrelatedFeature = true;
-            if (pDll == IntPtr.Zero)
+            if (this.pDll == IntPtr.Zero)
             {
                 isSetAllCorrelatedFeature = false;
                 return IntPtr.Zero;
@@ -90,7 +109,6 @@ namespace ADP2_FLIGHTGEAR.Model
         {
             if (feature == null)
             {
-                isSetAllCorrelatedFeature = false;
                 return -1;
             }
             /*if (!isSetAllCorrelatedFeature) {
@@ -102,7 +120,15 @@ namespace ADP2_FLIGHTGEAR.Model
                 return -1;
             }
             GetCorrelatedFeature getCorrelatedFeature = (GetCorrelatedFeature)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetCorrelatedFeature));
-            return getCorrelatedFeature(myCF, feature);
+            try
+            {
+                return getCorrelatedFeature(myCF, feature);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return -1;
+            }
         }
 
         //get MyCorrelatedFeature class and a feature and return double array like that: {startX, startY, endX, endY}. 
@@ -111,7 +137,6 @@ namespace ADP2_FLIGHTGEAR.Model
         {
             if (feature == null)
             {
-                isSetAllCorrelatedFeature = false;
                 return null;
             }
             /*if (!isSetAllCorrelatedFeature)
@@ -124,14 +149,98 @@ namespace ADP2_FLIGHTGEAR.Model
                 return null;
             }
             GetRegressionLine getRegressionLine = (GetRegressionLine)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetRegressionLine));
-            IntPtr pArray = getRegressionLine(myCF, feature);
-            if (pArray == IntPtr.Zero)
+            IntPtr pArray = IntPtr.Zero;
+            try
+            {
+                pArray = getRegressionLine(myCF, feature);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            if (pArray == IntPtr.Zero || pArray == null)
             {
                 return null;
             }
             float[] result = new float[4];
             Marshal.Copy(pArray, result, 0, 4);
             return result;
+        }
+
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        //return null when error happen.
+        public float[] Dll_GetRegressionCircle(IntPtr myCF, string feature) {
+            if (feature == null)
+            {
+                return null;
+            }
+            IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetRegressionCircle");
+            if (pAddressOfFunctionToCall == IntPtr.Zero)
+            {
+                return null;
+            }
+            GetRegressionCircle getRegressionCircle = (GetRegressionCircle)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetRegressionCircle));
+            IntPtr pArray = IntPtr.Zero;
+            try
+            {
+                pArray = getRegressionCircle(myCF, feature);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            if (pArray == IntPtr.Zero || pArray == null)
+            {
+                return null;
+            }
+            float[] result = new float[3];
+            Marshal.Copy(pArray, result, 0, 3);
+            return result;
+        }
+
+        //get MyCorrelatedFeature class and add all the anomalies in the csvFileAnomaly to the file placeForAns.
+        //Return 0 if failed otherwise return 1.
+        public int Dll_GetAnomalies(IntPtr myCF, string csvFileAnomaly, string placeForAns)
+        {
+            if (csvFileAnomaly == null || placeForAns == null || myCF == IntPtr.Zero)
+            {
+                return 0;
+            }
+            IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetAnomalies");
+            if (pAddressOfFunctionToCall == IntPtr.Zero)
+            {
+                return 0;
+            }
+            GetAnomalies getAnomalies = (GetAnomalies)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetAnomalies));
+            try
+            {
+                return getAnomalies(myCF, csvFileAnomaly, placeForAns);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return 0;
+            }
+        }
+
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        //return -1 when error happen.
+        public int Dll_GetTypeDll() {
+            IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetTypeDll");
+            if (pAddressOfFunctionToCall == IntPtr.Zero)
+            {
+                return -1;
+            }
+            GetTypeDll getTypeDll = (GetTypeDll)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetTypeDll));
+            try
+            {
+                return getTypeDll();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return -1;
+            }
         }
 
         public void DllDisconnect()

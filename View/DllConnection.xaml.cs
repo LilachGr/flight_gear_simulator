@@ -27,7 +27,6 @@ namespace ADP2_FLIGHTGEAR.View
         DashBoardViewModel vmDash;
         public DllConnection(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
         {
-
             this.vm = vm;
             this.vmJoy = vmJoy;
             this.vmDash = vmDash;
