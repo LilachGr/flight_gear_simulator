@@ -46,11 +46,6 @@ namespace flight_gear_simulator
 
         private void Button_JustCsvFlyOption(object sender, RoutedEventArgs e)
         {
-            /*if (isFlyStarted)
-            {
-                vm.VM_disconnect();
-                isFlyStarted = false;
-            }*/
             isFlyStarted = true;
             controler.VM_ViewModel = vm;
             controler.DataContext = vm;
@@ -87,13 +82,15 @@ namespace flight_gear_simulator
 
         private void Mainwindow_Click(object sender, RoutedEventArgs e)
         {
+            isFlyStarted = false;
+            isConnectDll = false;
             if (vm.Vm_isDisconnected())
             {
-                // vm.VM_disconnect();
                 MainWindow main = new MainWindow();
                 main.Show();
                 this.Close();
             }
+
             else
             {
                 vm.VM_disconnect();
@@ -105,7 +102,6 @@ namespace flight_gear_simulator
 
         private void Exit_Click_3(object sender, RoutedEventArgs e)
         {
-            //vm.VM_disconnect();
             if (vm.Vm_isDisconnected())
             {
                 Application.Current.Shutdown();
@@ -127,12 +123,6 @@ namespace flight_gear_simulator
             Connection connect = new Connection(vm,vmJoy,vmDash);
             connect.Show();
             this.Close();
-            //stopFly.IsEnabled = true;
-            //flyCsv.IsEnabled = true;
-
-            //Connection connect = new Connection(vm);
-            // connect.Show();
-            // this.Close();
         }
 
         private void Button_DataInvestigation(object sender, RoutedEventArgs e)
@@ -173,7 +163,6 @@ namespace flight_gear_simulator
         {
             vm.VM_Play();
         }
-
 
         //speed change in the flight
         private void Speedchange_Click_05(object sender, RoutedEventArgs e)

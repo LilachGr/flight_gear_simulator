@@ -523,13 +523,30 @@ namespace flight_gear_simulator.Model
             return this.dllFunc.Dll_GetCorrelatedFeature(this.PtrForDll, feature);
         }
 
+        public int GetDllType()
+        {
+            if (isDllHasProblem)
+            {
+                return -1;
+            }
+            int ans = this.dllFunc.Dll_GetTypeDll();
+            if (ans == -1) { isDllHasProblem = true; }
+            return ans;
+        }
+
         public float[] GetRegressionLine(string feature)
         {
             float[] ans = this.dllFunc.Dll_GetRegressionLine(this.PtrForDll, feature);
             if (ans == null)
             {
-                isDllHasProblem = false;
+                isDllHasProblem = true;
             }
+            return ans;
+        }
+
+        public float[] GetRegressionCircle(string feature)
+        {
+            float[] ans = this.dllFunc.Dll_GetRegressionCircle(this.PtrForDll, feature);
             return ans;
         }
 

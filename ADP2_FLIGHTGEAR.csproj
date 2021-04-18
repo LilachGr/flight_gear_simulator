@@ -247,8 +247,5 @@
   <ItemGroup>
     <Resource Include="backgrounds\plane-passing-by-sun-cloudy-day_1286-143.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="backgrounds\airplane-flying-cloudy-sky_144627-132.jpg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

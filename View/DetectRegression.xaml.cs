@@ -31,7 +31,12 @@ namespace ADP2_FLIGHTGEAR.View
             this.vmDash = vmDash;
             DataContext = vm;
             InitializeComponent();
-            listAnomalies.ItemsSource = vm.GetAllAnomalies();
+            List<string> anomalies = vm.GetAllAnomalies();
+            if(anomalies.Count == 0)
+            {
+                anomalies.Add("There isn't anomalies in this flight!");
+            }
+            listAnomalies.ItemsSource = anomalies;
             //CompositionTarget.Rendering += CompositionTargetRendering;
             vm.SetUpModelAnomaliesGraph();
             vm.ButtonChosenAnomalyGraphPressed = false;

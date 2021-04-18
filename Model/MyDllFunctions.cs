@@ -34,6 +34,13 @@ namespace ADP2_FLIGHTGEAR.Model
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int GetAnomalies(IntPtr myCF, [MarshalAs(UnmanagedType.LPStr)] string csvFileAnomaly, [MarshalAs(UnmanagedType.LPStr)] string placeForAns);
 
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int GetTypeDll();
+
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr GetRegressionCircle(IntPtr myCF, [MarshalAs(UnmanagedType.LPStr)] string feature);
 
         private IntPtr pDll = IntPtr.Zero;
         private bool isSetAllCorrelatedFeature = false;
@@ -151,12 +158,43 @@ namespace ADP2_FLIGHTGEAR.Model
             {
                 Console.WriteLine(ex);
             }
-            if (pArray == IntPtr.Zero)
+            if (pArray == IntPtr.Zero || pArray == null)
             {
                 return null;
             }
             float[] result = new float[4];
             Marshal.Copy(pArray, result, 0, 4);
+            return result;
+        }
+
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        //return null when error happen.
+        public float[] Dll_GetRegressionCircle(IntPtr myCF, string feature) {
+            if (feature == null)
+            {
+                return null;
+            }
+            IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetRegressionCircle");
+            if (pAddressOfFunctionToCall == IntPtr.Zero)
+            {
+                return null;
+            }
+            GetRegressionCircle getRegressionCircle = (GetRegressionCircle)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetRegressionCircle));
+            IntPtr pArray = IntPtr.Zero;
+            try
+            {
+                pArray = getRegressionCircle(myCF, feature);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            if (pArray == IntPtr.Zero || pArray == null)
+            {
+                return null;
+            }
+            float[] result = new float[3];
+            Marshal.Copy(pArray, result, 0, 3);
             return result;
         }
 
@@ -182,6 +220,26 @@ namespace ADP2_FLIGHTGEAR.Model
             {
                 Console.WriteLine(ex);
                 return 0;
+            }
+        }
+
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        //return -1 when error happen.
+        public int Dll_GetTypeDll() {
+            IntPtr pAddressOfFunctionToCall = GetProcAddress(this.pDll, "GetTypeDll");
+            if (pAddressOfFunctionToCall == IntPtr.Zero)
+            {
+                return -1;
+            }
+            GetTypeDll getTypeDll = (GetTypeDll)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetTypeDll));
+            try
+            {
+                return getTypeDll();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return -1;
             }
         }
 

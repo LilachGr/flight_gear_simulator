@@ -56,13 +56,19 @@ namespace flight_gear_simulator.Model
         AnomalyInfo GetSpecificAnomaly(int index);
         //get all anomalies index that has same features
         List<long> GetAnomaliesSameFeatures(AnomalyInfo anomaly);
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        //return -1 when error happen.
+        int GetDllType();
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        //return null when error happen.
+        float[] GetRegressionCircle(string feature);
 
-    //connection
+        //connection
         Thread myThread { get; }
         int Port { get; set; }
         string Ip { get; set; }
         bool CorrectCSV { get; }
-         bool CorrectXml { get; }
+        bool CorrectXml { get; }
         bool CorrectIp_Port { get; }
 
         //Control Flight Buttons
@@ -80,13 +86,13 @@ namespace flight_gear_simulator.Model
         int csvSize { get; }
         string Setindxo { get; set; }
         void changeSpeed(double speed);
-         int Speedsend { get; set; }
+        int Speedsend { get; set; }
 
 
-         string Time { get; set; }
+        string Time { get; set; }
 
         // set the time
-         void setTime();
+        void setTime();
 
         ///DASHBOARD
         //property of the Airspeed
@@ -96,11 +102,11 @@ namespace flight_gear_simulator.Model
         //property of the Direction
         float Direction { get; set; }
         //property of the Pitch
-         float Pitch { get; set; }
+        float Pitch { get; set; }
         //property of the Yaw
-         float Yaw { get; set; }
+        float Yaw { get; set; }
         //property of the Altimeter
-         float Altimeter { get; set; }
+        float Altimeter { get; set; }
 
         //joystic
         ////// Joystick //////

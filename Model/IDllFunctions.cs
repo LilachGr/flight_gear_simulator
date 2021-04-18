@@ -23,6 +23,14 @@ namespace ADP2_FLIGHTGEAR.Model
         //get MyCorrelatedFeature class and add all the anomalies in the csvFileAnomaly to the file placeForAns. return 0 if failed otherwise return 1.
         int Dll_GetAnomalies(IntPtr myCF, string csvFileAnomaly, string placeForAns);
 
+        //get MyCorrelatedFeature class and a feature and return float array like that: {centerX, centerY, radius}.
+        //return null when error happen.
+        float[] Dll_GetRegressionCircle(IntPtr myCF, string feature);
+
+        //return 0 if it is regerssion algorithem otherwise if it is circle algorhitem return 1.
+        //return -1 when error happen.
+        int Dll_GetTypeDll();
+
         //disconnect from the dll
         void DllDisconnect();
 

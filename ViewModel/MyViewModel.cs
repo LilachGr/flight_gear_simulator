@@ -85,7 +85,7 @@ namespace flight_gear_simulator.ViewModel
 
             var dateAxis = new DateTimeAxis() { StringFormat = "HH:mm:ss", MajorGridlineStyle = LineStyle.Solid, Title = "Time", MinorGridlineStyle = LineStyle.Dot, Position = AxisPosition.Bottom };
             PlotCorrelatedGraph.Axes.Add(dateAxis);
-            var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = VMGetCorrelatedValue() };
+            var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null" };
             PlotCorrelatedGraph.Axes.Add(valueAxisY);
             PlotCorrelatedGraph.Series.Add(LineSerieCorrelated);
         }
@@ -94,9 +94,9 @@ namespace flight_gear_simulator.ViewModel
         {
             PlotBothFeaturesGraph.Background = OxyColors.LightBlue;
 
-            var valueAxisX = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = ChosenValue, Position = AxisPosition.Bottom };
+            var valueAxisX = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null", Position = AxisPosition.Bottom };
             PlotBothFeaturesGraph.Axes.Add(valueAxisX);
-            var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = VMGetCorrelatedValue() };
+            var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null" };
             PlotBothFeaturesGraph.Axes.Add(valueAxisY);
             PlotBothFeaturesGraph.Series.Add(LineRegression);
             PlotBothFeaturesGraph.Series.Add(LineSerieBothFeatures);
@@ -543,6 +543,8 @@ namespace flight_gear_simulator.ViewModel
             LineSerieAnomalyGraphAllPoints.ClearSelection();
             LineSerieAnomalyPoints.Points.Clear();
             LineSerieAnomalyPoints.ClearSelection();
+            LineSerieAnomalyCircle.Points.Clear();
+            LineSerieAnomalyCircle.ClearSelection();
 
             plotAnomaliesGraph.Series.Clear();
             plotAnomaliesGraph = new PlotModel();
@@ -592,12 +594,21 @@ namespace flight_gear_simulator.ViewModel
 
         private LineSeries LineSerieAnomalyLine = new LineSeries
         {
-            /////////////////////////////////////////////////////
             //we need to seperate if we are in circle or line
             StrokeThickness = 3,
             Color = OxyColors.DarkBlue,
             CanTrackerInterpolatePoints = false,
-            ////////////////////////////////////////////////////
+        };
+
+        private LineSeries LineSerieAnomalyCircle = new LineSeries
+        {
+            StrokeThickness = 3,
+            MarkerStroke = OxyColors.DarkBlue,
+            CanTrackerInterpolatePoints = false,
+            MarkerType = MarkerType.Circle,
+            MarkerStrokeThickness = 3,
+            MarkerSize = 5,
+            MarkerFill = OxyColors.Transparent,
         };
 
         public void SetUpModelAnomaliesGraph() {
@@ -608,6 +619,7 @@ namespace flight_gear_simulator.ViewModel
             var valueAxisY = new LinearAxis() { MajorGridlineStyle = LineStyle.Solid, MinorGridlineStyle = LineStyle.Dot, Title = "null" };
             PlotAnomaliesGraph.Axes.Add(valueAxisY);
             PlotAnomaliesGraph.Series.Add(LineSerieAnomalyLine);
+            plotAnomaliesGraph.Series.Add(LineSerieAnomalyCircle);
             PlotAnomaliesGraph.Series.Add(LineSerieAnomalyGraphAllPoints);
             PlotAnomaliesGraph.Series.Add(LineSerieAnomalyPoints);
         }
@@ -631,20 +643,38 @@ namespace flight_gear_simulator.ViewModel
             LineSerieAnomalyLine.Points.Clear();
             LineSerieAnomalyGraphAllPoints.Points.Clear();
             LineSerieAnomalyPoints.Points.Clear();
+            LineSerieAnomalyCircle.Points.Clear();
             if (Anomaly == null)
             {
                 return;
             }
-            ///////////////////////////////////////
-            //{ startX, startY, endX, endY}
-            float[] linePoints = model.GetRegressionLine(Anomaly.Feature1);
-            if (linePoints == null)
+            // 0 - regerssion algorithem , 1 - circle algorhitem.
+            int dllType = model.GetDllType();
+            if (dllType == -1)
             {
                 return;
             }
-            LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[0], linePoints[1]));
-            LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[2], linePoints[3]));
-            ////////////////////////////////////////
+            if (dllType == 0)
+            {
+                //{ startX, startY, endX, endY}
+                float[] linePoints = model.GetRegressionLine(Anomaly.Feature1);
+                if (linePoints == null || linePoints.Length < 4)
+                {
+                    return;
+                }
+                LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[0], linePoints[1]));
+                LineSerieAnomalyLine.Points.Add(new DataPoint(linePoints[2], linePoints[3]));
+            } else if (dllType == 1)
+            {
+                //{centerX, centerY, radius}
+                float[] circleData = model.GetRegressionCircle(Anomaly.Feature1);
+                if (circleData == null || circleData.Length < 3)
+                {
+                    return;
+                }
+                LineSerieAnomalyCircle.Points.Add(new DataPoint(circleData[0], circleData[1]));
+                LineSerieAnomalyCircle.MarkerSize = circleData[2];
+            }
             List<List<float>> allData = model.GetData();
             int sizeAllData = allData.Count;
             if (sizeAllData <= 0)
