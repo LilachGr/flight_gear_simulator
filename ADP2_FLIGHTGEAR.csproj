@@ -109,9 +109,6 @@
     <Compile Include="View\DllConnection.xaml.cs">
       <DependentUpon>DllConnection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\FlighGear1.xaml.cs">
-      <DependentUpon>FlighGear1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\FlyWindow.xaml.cs">
       <DependentUpon>FlyWindow.xaml</DependentUpon>
     </Compile>
@@ -192,10 +189,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DllConnection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\FlighGear1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
