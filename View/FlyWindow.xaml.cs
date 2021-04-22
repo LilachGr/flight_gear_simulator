@@ -121,17 +121,18 @@ namespace flight_gear_simulator
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             Connection connect = new Connection(vm,vmJoy,vmDash);
+            this.Opacity = 0;
             connect.Show();
-            this.Close();
+            //this.Close();
         }
 
         private void Button_DataInvestigation(object sender, RoutedEventArgs e)
         {
             if (isFlyStarted && isConnectDll)
             {
-                DataInvestigation investigation = new DataInvestigation(vm, vmJoy, vmDash);
+                DataInvestigation investigation = new DataInvestigation(vm, vmJoy, vmDash,this);
                 investigation.Show();
-                this.Close();
+                //this.Close();
             } else if (!isFlyStarted)
             {
                 MessageBox.Show("You need to start the flight before using this option!");
@@ -144,9 +145,10 @@ namespace flight_gear_simulator
         private void Button_ConnectDll(object sender, RoutedEventArgs e)
         {
             isConnectDll = true;
-            DllConnection connect = new DllConnection(vm, vmJoy, vmDash);
+            DllConnection connect = new DllConnection(vm, vmJoy, vmDash,this);
+            this.Opacity = 0;
             connect.Show();
-            this.Close();
+            //this.Close();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)

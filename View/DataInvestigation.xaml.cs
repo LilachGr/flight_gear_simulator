@@ -28,8 +28,10 @@ namespace ADP2_FLIGHTGEAR.View
         MyViewModel vm;
         VMJoystic vmJoy;
         DashBoardViewModel vmDash;
-        public DataInvestigation(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
+        FlyWindow flyStart;
+        public DataInvestigation(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash, FlyWindow FlyStart)
         {
+            this.flyStart = FlyStart;
             this.vm = vm;
             this.vmJoy = vmJoy;
             this.vmDash = vmDash;
@@ -73,14 +75,14 @@ namespace ADP2_FLIGHTGEAR.View
         private void Mainwindow_Click(object sender, RoutedEventArgs e)
         {
             vm.DisconnectPlotModel();
-            FlyWindow main = new FlyWindow(vm, vmJoy, vmDash);
-            main.Show();
+            //FlyWindow main = new FlyWindow(vm, vmJoy, vmDash);
+            //main.Show();
             this.Close();
         }
 
         private void DetectRegression_Click(object sender, RoutedEventArgs e)
         {
-            DetectRegression investigation = new DetectRegression(vm, vmJoy, vmDash);
+            DetectRegression investigation = new DetectRegression(vm, vmJoy, vmDash, flyStart);
             investigation.Show();
             this.Close();
         }

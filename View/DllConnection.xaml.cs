@@ -25,8 +25,10 @@ namespace ADP2_FLIGHTGEAR.View
         MyViewModel vm;
         VMJoystic vmJoy;
         DashBoardViewModel vmDash;
-        public DllConnection(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
+        FlyWindow flyStart;
+        public DllConnection(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash, FlyWindow flyStart)
         {
+            this.flyStart = flyStart;
             this.vm = vm;
             this.vmJoy = vmJoy;
             this.vmDash = vmDash;
@@ -40,10 +42,11 @@ namespace ADP2_FLIGHTGEAR.View
             if (vm.VMIsDllConnected())
             {
                 MessageBox.Show("connected successfully");
-                FlyWindow fly = new FlyWindow(vm, vmJoy, vmDash);
+                //FlyWindow fly = new FlyWindow(vm, vmJoy, vmDash);
                 //fly.DataContext = this;
-                fly.Show();
+                //fly.Show();
                 this.Close();
+                flyStart.Opacity = 1;
             } else
             {
                 MessageBox.Show("connection failed, try again!");

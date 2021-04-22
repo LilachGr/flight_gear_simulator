@@ -24,8 +24,10 @@ namespace ADP2_FLIGHTGEAR.View
         MyViewModel vm;
         VMJoystic vmJoy;
         DashBoardViewModel vmDash;
-        public DetectRegression(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash)
+        FlyWindow flyStart;
+        public DetectRegression(MyViewModel vm, VMJoystic vmJoy, DashBoardViewModel vmDash, FlyWindow FlyStart)
         {
+            this.flyStart = FlyStart;
             this.vm = vm;
             this.vmJoy = vmJoy;
             this.vmDash = vmDash;
@@ -42,22 +44,13 @@ namespace ADP2_FLIGHTGEAR.View
             vm.ButtonChosenAnomalyGraphPressed = false;
         }
 
-     /*   private void CompositionTargetRendering(object sender, EventArgs e)
-        {
-            if (vm.ButtonChosenAnomalyGraphPressed)
-            {
-                vm.UpdateModelAnomaliesGraph();
-                AnomaliesGraph.InvalidateVisual();
-            }
-        }*/
-
-    private void Mainwindow_Click(object sender, RoutedEventArgs e)
+        private void Mainwindow_Click(object sender, RoutedEventArgs e)
         {
             //missing-disconnect the graph of anomalies
             vm.DisconnectDetectRegression();
             vm.DisconnectPlotModel();
-            FlyWindow main = new FlyWindow(vm, vmJoy, vmDash);
-            main.Show();
+            //FlyWindow main = new FlyWindow(vm, vmJoy, vmDash);
+            //main.Show();
             this.Close();
         }
 
